@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useState } from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import Header from "./view/layouts/header/Header";
-import Sidebar from "./view/layouts/sidebar/Sidebar";
 import { sidebarConfig } from "./common/types/constants/SidebarConfig";
 import { ToggleType } from "./common/types/interface/Layouts.interface";
 import RequireAuth from "./view/common/authantications/RequireAuth";
+import Header from "./view/layouts/header/Header";
+import Sidebar from "./view/layouts/sidebar/Sidebar";
 const NotFound = () => <h1>Page Not Found</h1>;
 
 const App = () => {

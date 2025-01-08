@@ -6,6 +6,7 @@ import {
 import { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import React from "react";
 
 const Sidebar = ({
   collapse,

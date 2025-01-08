@@ -1,6 +1,7 @@
 import { RiDashboardLine } from "react-icons/ri";
 import { SidebarConfig } from "../interface/Layouts.interface";
 import CustomerCRM from "../../../view/pages/cstomer-crm/CustomerCRM";
+import React from "react";
 
 // Sidebar and Route Configuration
 export const sidebarConfig: SidebarConfig[] = [

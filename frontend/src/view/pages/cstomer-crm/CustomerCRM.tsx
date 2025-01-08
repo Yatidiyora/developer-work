@@ -3,7 +3,7 @@ import axios from 'axios';
 import CustomerCRMApi from '../../../api/CustomerCRMApi';
 
 const CustomerCRM = () => {
-    const [customers, setCustomers] = useState([]);
+    const [customers, setCustomers] = useState<any>([]);
     const customerCrmInstance = CustomerCRMApi.getCustomerCRMInstance();
 
     useEffect(() => {
