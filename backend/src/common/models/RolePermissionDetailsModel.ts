@@ -1,0 +1,59 @@
+import { Sequelize, Model, DataTypes } from 'sequelize';
+import { TABLES } from '../types/enums/CommonEnums';
+
+
+export class RolePermissionDetailsModel extends Model {
+  public id: string;
+  public roleId: string;
+  public permissionId: string;
+  public permissionName: string;
+  public view: number;
+  public edit: number;
+  public delete: number;
+  public createdAt: Date;
+  public updatedAt: Date;
+}
+
+export const initRolePermissionDetailsModel = (sequelize: Sequelize) => {
+  RolePermissionDetailsModel.init(
+    {
+      id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      roleId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      permissionId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      permissionName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      view: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true,
+      },
+      edit: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      delete: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+      },
+    },
+    {
+      sequelize,
+      freezeTableName: true,
+      underscored: true,
+      tableName: TABLES.ROLE_PERMISSION_DETAILS,
+    },
+  );
+};
