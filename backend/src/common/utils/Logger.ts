@@ -2,14 +2,14 @@ import { addLayout, configure, getLogger } from 'log4js';
 
 addLayout('json', () => {
   return (logEvent) => {
-    return JSON.stringify(logEvent);
+    return JSON.stringify(logEvent, null, 2);
   };
 });
 
 export const configureLogging = (level: string) => {
   configure({
     appenders: {
-      out: { type: 'stdout', layout: { type: 'json', separator: ',' } },
+      out: { type: 'stdout', layout: { type: 'pattern', separator: ',' } },
     },
     categories: {
       default: { appenders: ['out'], level: level },

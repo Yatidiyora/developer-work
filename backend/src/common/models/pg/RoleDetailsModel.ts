@@ -1,8 +1,8 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
-import { TABLES } from '../types/enums/CommonEnums';
+import { TABLES } from '../../types/enums/CommonEnums';
 
 export class RoleDetailsModel extends Model {
-  public id: number;
+  public id: string;
   public name!: string;
   public description: string;
   public createdAt: Date;
@@ -13,9 +13,8 @@ export const initRoleDetailsModel = (sequelize: Sequelize) => {
   RoleDetailsModel.init(
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
       },
       name: {

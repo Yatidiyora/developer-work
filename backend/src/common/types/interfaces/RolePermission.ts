@@ -1,4 +1,4 @@
-import { RolePermissionDetailsModel } from "../../models";
+import { RolePermissionDetailsModel } from '../../models/pg';
 
 export interface RolePermission {
   roleId?: string;
@@ -9,7 +9,7 @@ export interface RolePermission {
   delete: number;
 }
 export interface RolePermissionsById {
-  id: number;
+  id: string;
   name: string;
   permissions: RolePermissionDetailsModel[];
   createdAt: Date;

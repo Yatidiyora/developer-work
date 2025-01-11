@@ -9,10 +9,9 @@ import session from 'express-session';
 import route from './routes';
 import { getCustomLogger } from './common/utils/Logger';
 import getConfig from './common/config/config';
-import { initAuroraDB } from './common/models';
+import { initAuroraDB } from './common/models/pg';
 import { loadSystemConfiguration } from './common/repository/ConfigurationRepository';
 import { samlStrategy } from './samlStrategy';
-
 
 const logger = getCustomLogger('app');
 
@@ -72,7 +71,7 @@ app.get('/restart/eks', () => {
 
 app.use(async (req, res, next) => {
   // After successful login, redirect back to the intended page
-  res.status(200).end('WFMSync app is running');
+  res.status(200).end('developer work app is running');
   res.end();
   next();
 });
@@ -82,9 +81,7 @@ app.use(async (req, res, next) => {
   await new Promise((resolve) => setTimeout(resolve, 10000));
   loadSystemConfiguration().then(() => {
     try {
-      setTimeout(() => {
-        
-      }, 5000);
+      setTimeout(() => {}, 5000);
     } catch (error) {
       logger.info('Error while initializing the application: ', error);
     }

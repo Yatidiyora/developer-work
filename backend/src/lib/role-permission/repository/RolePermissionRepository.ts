@@ -1,9 +1,8 @@
-
-import { RolePermissionDetailsModel } from '../../../common/models/RolePermissionDetailsModel';
+import { RolePermissionDetailsModel } from '../../../common/models/pg/RolePermissionDetailsModel';
 
 import { Op } from 'sequelize';
 import { getCustomLogger } from '../../../common/utils/Logger';
-import { PermissionDetailsModel } from '../../../common/models/PermissionsDetailsModel';
+import { PermissionDetailsModel } from '../../../common/models/pg/PermissionsDetailsModel';
 
 const logger = getCustomLogger('RolePermission::RolePermissionRepository');
 

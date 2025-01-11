@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
-import { UserRoleMappingModel } from '../../../common/models/arora/index';
-import { getCustomLogger } from '../../../common/utils/logger';
 import { UserRoleMapping } from '../../../common/types/interfaces/UserInterface';
+import { UserRoleMappingModel } from '../../../common/models/pg/UserRoleMappingModel';
+import { getCustomLogger } from '../../../common/utils/Logger';
 
 const logger = getCustomLogger('UserRole::UserRoleRepository');
 

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { STATUS_CODE, STATUS_MESSAGE } from '../../../common/types/enums/CommonEnums';
-import { getCustomLogger } from '../../../common/utils/logger';
 import { fetchAvailablePermissions, fetchPermissions } from '../repository/RolePermissionRepository';
 import { RequestUser } from '../../../common/types/interfaces/UserInterface';
-import { fetchRoles } from '../../UserRole/Repository/UserRoleRepository';
+import { getCustomLogger } from '../../../common/utils/Logger';
+import { fetchRoles } from '../../../lib/user-roles/repository/UserRoleRepository';
 
 const logger = getCustomLogger('RolePermission::RolePermissionService');
 

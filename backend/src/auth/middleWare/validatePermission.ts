@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { STATUS_CODE, STATUS_MESSAGE, ACTION } from '../../common/types/enums/CommonEnums';
 import { RequestUser } from '../../common/types/interfaces/UserInterface';
-import { fetchRoles } from '../../WFMSync/UserRole/Repository/UserRoleRepository';
-import { fetchPermissions } from '../../WFMSync/RolePermission/Repository/RolePermissionRepository';
-import { RolePermissionDetailsModel } from '../../common/models/arora/RolePermissionDetailsModel';
+import { fetchRoles } from '../../lib/user-roles/repository/UserRoleRepository';
+import { RolePermissionDetailsModel } from '../../common/models/pg';
+import { fetchPermissions } from '../../lib/role-permission/repository/RolePermissionRepository';
 
 export const validatePermission = (module: string | string[], action: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {

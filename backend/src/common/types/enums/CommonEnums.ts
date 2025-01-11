@@ -22,6 +22,8 @@ export enum STATUS_MESSAGE {
   USER_NOT_FOUND = 'User not found',
   USER_IS_ALREADY_PRESENT = 'User is already present',
 
+  PERMISSIONS_NOT_FOUND = 'Permissions not found',
+
   UNAUTHORIZED = "You don't have sufficient permissions to perform action",
 
   ERROR = 'Error',

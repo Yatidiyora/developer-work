@@ -1,11 +1,10 @@
-
 import { Op } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { RolePermission } from '../../../common/types/interfaces/RolePermission';
 import { COMMON_COLUMNS, SORT } from '../../../common/types/enums/CommonEnums';
 import { getCustomLogger } from '../../../common/utils/Logger';
-import { RolePermissionDetailsModel } from '../../../common/models/RolePermissionDetailsModel';
-import { RoleDetailsModel } from '../../../common/models/RoleDetailsModel';
+import { RolePermissionDetailsModel } from '../../../common/models/pg/RolePermissionDetailsModel';
+import { RoleDetailsModel } from '../../../common/models/pg/RoleDetailsModel';
 
 const logger = getCustomLogger('Role::RolesRepository');
 

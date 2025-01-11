@@ -1,5 +1,4 @@
-
-import { ConfigurationDetailsModel } from '../models/ConfigurationDetailsModel';
+import { ConfigurationDetailsModel } from '../models/pg/ConfigurationDetailsModel';
 import { getCustomLogger } from '../utils/Logger';
 
 const logger = getCustomLogger('common::Repository::ConfigurationRepository');

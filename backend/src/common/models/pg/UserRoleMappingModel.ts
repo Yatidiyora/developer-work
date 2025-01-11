@@ -1,5 +1,5 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
-import { TABLES } from '../types/enums/CommonEnums';
+import { TABLES } from '../../types/enums/CommonEnums';
 
 export class UserRoleMappingModel extends Model {
   public id: string;

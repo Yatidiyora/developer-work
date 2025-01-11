@@ -1,6 +1,5 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
-import { TABLES } from '../types/enums/CommonEnums';
-
+import { TABLES } from '../../types/enums/CommonEnums';
 
 export class ConfigurationDetailsModel extends Model {
   public key: string;
@@ -16,6 +15,7 @@ export const initConfigurationDetailsModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
+        unique: true,
       },
       value: {
         type: DataTypes.STRING,

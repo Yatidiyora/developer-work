@@ -1,5 +1,5 @@
 import { STATUS_CODE } from '../../common/types/enums/CommonEnums';
-import * as Repository from '../../WFMSync/Users/Repository/UserRepository';
+import * as Repository from '../../lib/users/repository/UserRepository';
 import { Request } from 'express';
 
 export const validateUser = async (req: Request) => {

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UpdateUserRequest } from '../../../common/types/interfaces/UserInterface';
 import { COMMON_COLUMNS, SORT } from '../../../common/types/enums/CommonEnums';
 import { getCustomLogger } from '../../../common/utils/Logger';
-import { RoleDetailsModel, UserDetailsModel, UserRoleMappingModel } from '../../../common/models';
+import { RoleDetailsModel, UserDetailsModel, UserRoleMappingModel } from '../../../common/models/pg';
 
 const logger = getCustomLogger('User::UserRepository');
 
@@ -137,7 +137,7 @@ export const fetchUserById = async (id: string) => {
     return await UserDetailsModel.findOne({
       attributes: { exclude: ['password'] },
       where: {
-        Id: id,
+        id: id,
       },
       raw: true,
     });
@@ -146,7 +146,11 @@ export const fetchUserById = async (id: string) => {
     throw error;
   }
 };
-export function fetchUserIDMDetail(arg0: any, arg1: string): { hltrealfirstname: any; hltreallastname: any; idm: any; mail: any; } | PromiseLike<{ hltrealfirstname: any; hltreallastname: any; idm: any; mail: any; }> {
+export function fetchUserIDMDetail(
+  arg0: any,
+  arg1: string,
+):
+  | { hltrealfirstname: any; hltreallastname: any; idm: any; mail: any }
+  | PromiseLike<{ hltrealfirstname: any; hltreallastname: any; idm: any; mail: any }> {
   throw new Error('Function not implemented.');
 }
-

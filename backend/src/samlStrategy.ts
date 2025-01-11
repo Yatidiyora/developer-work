@@ -9,9 +9,7 @@ import querystring from 'querystring';
 import url from 'url';
 import getConfig from './common/config/config';
 import logger from './common/utils/Logger';
-import { UserDetailsModel } from './common/models/UserDetailsModel';
-
-
+import { UserDetailsModel } from './common/models/pg/UserDetailsModel';
 
 export const samlStrategy = new MultiSamlStrategy(
   {
@@ -133,7 +131,7 @@ export const samlCallback = async (
     });
     if (/localhost/.test(relayState)) {
       res.setHeader('Cache-Control', 'no-cache, no store');
-      res.redirect((relayState) + '?' + querystring.stringify(payload));
+      res.redirect(relayState + '?' + querystring.stringify(payload));
     } else {
       res.setHeader('Cache-Control', 'no-cache, no store');
       res.redirect(relayState);

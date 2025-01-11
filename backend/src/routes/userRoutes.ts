@@ -12,7 +12,7 @@ router.get('/:id', validatePermission(MODULE.USER, ACTION.VIEW), userService.fet
 //protected routes
 router.post(
   '/',
-  validatePermission(MODULE.USER, ACTION.UPDATE),
+  // validatePermission(MODULE.USER, ACTION.UPDATE),
   userService.userValidator,
   userService.addUserAndUserroleToDb,
 );
