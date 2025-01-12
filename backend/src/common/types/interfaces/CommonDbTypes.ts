@@ -20,7 +20,7 @@ export interface DataConditions {
   paginationData?: {
     limit: number;
     offset: number;
-    order: OrderItem[];
+    order?: OrderItem[];
   };
   requiredColumns?: FindAttributeOptions;
   group?: GroupOption;

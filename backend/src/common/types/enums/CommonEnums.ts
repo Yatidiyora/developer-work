@@ -144,6 +144,9 @@ export enum DB_MODELS {
   ConfigurationDetailsModel = 'ConfigurationDetailsModel',
   UserDetailsModel = 'UserDetailsModel',
   UserRoleMappingModel = 'UserRoleMappingModel',
+  RoleDetailsModel = 'RoleDetailsModel',
+  RolePermissionDetailsModel = 'RolePermissionDetailsModel',
+  PermissionDetailsModel = 'PermissionDetailsModel',
 }
 
 export enum DB_DATA_FUNCTIONS_TYPES {

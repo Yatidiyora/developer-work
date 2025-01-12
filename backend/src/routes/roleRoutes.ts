@@ -6,13 +6,13 @@ import { MODULE, ACTION } from '../common/types/enums/CommonEnums';
 const router = express.Router();
 
 //shared routes
-router.get('/', RoleService.fetchAllRoles);
+router.get('/', validatePermission(MODULE.ROLE, ACTION.DELETE), RoleService.fetchAllRoles);
 router.get('/search', validatePermission(MODULE.ROLE, ACTION.VIEW), RoleService.fetchRoleByRoleName);
 router.get('/:id', validatePermission(MODULE.ROLE, ACTION.VIEW), RoleService.fetchRoleByRoleId);
 
 //protected routes
-router.post('/', RoleService.addRoleToDb);
-router.post('/:id', RoleService.updateRoleToDb);
+router.post('/', validatePermission(MODULE.ROLE, ACTION.DELETE), RoleService.addRoleToDb);
+router.post('/:id', validatePermission(MODULE.ROLE, ACTION.DELETE), RoleService.updateRoleToDb);
 router.delete('/:id', validatePermission(MODULE.ROLE, ACTION.DELETE), RoleService.deleteRoleFromDb);
 
 export default router;
