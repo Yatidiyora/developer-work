@@ -11,7 +11,6 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { RequestQuery } from '../../../common/types/interfaces/UserInterface';
 import { getCustomLogger } from '../../../common/utils/Logger';
-import { addUserRoleMapping, deleteUserRoleMapping, fetchRoles } from '../../user-roles/repository/UserRoleRepository';
 import {
   DataConditions,
   GetAllDataResponse,
@@ -245,9 +244,16 @@ export const updateUserToDb = async (req: Request, res: Response) => {
         },
       }
       await commonDbExecution(deleteDataInTableObject);
-      rolesToAdd.map(async (role: string) => {
-        await addUserRoleMapping({ id: uuidv4(), userId: id, roleId: role });
+      const newRoles = rolesToAdd.map((role: string) => {
+        return { id: uuidv4(), userId: id, roleId: role };
       });
+      const upserSource: DataConditions = {
+        modelName: DB_MODELS.UserRoleMappingModel,
+        functionType: DB_DATA_FUNCTIONS_TYPES.bulkUpsertDataInTable,
+        upsertObjects: newRoles,
+        ignoreDuplicates: true,
+      };
+      await commonDbExecution(upserSource);
     }
     res.status(STATUS_CODE.SUCCESS).json({ message: STATUS_MESSAGE.USER_UPDATED, status: STATUS_MESSAGE.SUCCESS });
   } catch (error) {

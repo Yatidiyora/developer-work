@@ -25,9 +25,7 @@ export const fetchPermissionsFromUserId = async (req: Request, res: Response) =>
     const roleIds: string[] = roles.map((role) => role.roleId);
     rolesSource.modelName = DB_MODELS.RolePermissionDetailsModel;
     rolesSource.requiredWhereFields[0].conditionValue = {
-      roleId: {
-        [Op.in]: roleIds,
-      },
+      roleId: roleIds,
     };
     const { dataObjects: permissions } = (await commonDbExecution(
       rolesSource,

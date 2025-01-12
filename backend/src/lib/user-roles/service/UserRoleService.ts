@@ -1,4 +1,3 @@
-import * as Repository from '../repository/UserRoleRepository';
 import { Request, Response } from 'express';
 import { RequestUser } from '../../../common/types/interfaces/UserInterface';
 import { DB_MODELS, STATUS_CODE, STATUS_MESSAGE } from '../../../common/types/enums/CommonEnums';
