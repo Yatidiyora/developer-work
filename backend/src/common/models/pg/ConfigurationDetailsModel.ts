@@ -28,5 +28,5 @@ export const initConfigurationDetailsModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.CONFIGURATION,
     },
-  );
+  ).sync();
 };

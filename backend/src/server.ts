@@ -1,11 +1,10 @@
 import errorHandler from 'errorhandler';
 import dotenv from 'dotenv';
 import { getCustomLogger } from './common/utils/Logger';
-import app from './app';
-
 dotenv.config();
 const logger = getCustomLogger('server');
 
+import app from './app';
 /**
  * Error Handler. Provides full stack - remove for production
  */

@@ -32,5 +32,5 @@ export const initRoleDetailsModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.ROLE_DETAILS,
     },
-  );
+  ).sync();;
 };

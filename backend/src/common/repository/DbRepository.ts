@@ -1,5 +1,5 @@
 import { QueryTypes } from 'sequelize';
-import { sequelize as pgsql } from '../../common/models/pg/index';
+import { sequelize as pgSql } from '../../common/models/pg/index';
 import {
   DataConditions,
   GetAllDataResponse,
@@ -13,14 +13,14 @@ const logger = getCustomLogger('common::Repository::Db');
 
 export const fetchDataFromTable = async (source: DataConditions): Promise<GetAllDataResponse> => {
   try {
-    const { modelName, whereCondition, requiredColumns, group, logging = false } = source;
+    const { modelName, whereCondition, requiredColumns, group, logging = false, raw = false } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     const dataObjects = await dataModel.findAll({
       ...(requiredColumns && { attributes: requiredColumns }),
       where: whereCondition,
       ...(group && { group }),
-      raw: true,
+      ...(raw && { raw }),
       type: QueryTypes.SELECT,
       logging,
     });
@@ -42,7 +42,7 @@ export const fetchDataFromTableWithPagination = async (source: DataConditions): 
       logging = false,
     } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     const dataObjects = await dataModel.findAndCountAll({
       ...(requiredColumns && { attributes: requiredColumns }),
       where: whereCondition,
@@ -63,13 +63,13 @@ export const fetchDataFromTableWithPagination = async (source: DataConditions): 
 
 export const fetchExistingDataFromTable = async (source: DataConditions): Promise<GetDataResponse> => {
   try {
-    const { modelName, whereCondition, requiredColumns, logging = false } = source;
+    const { modelName, whereCondition, requiredColumns, logging = false, raw = false } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     const dataObject = await dataModel.findOne({
       ...(requiredColumns && { attributes: requiredColumns }),
       where: whereCondition,
-      raw: true,
+      ...(raw && { raw }),
       type: QueryTypes.SELECT,
       logging,
     });
@@ -89,7 +89,7 @@ export const updateDataInTable = async (source: DataConditions): Promise<UpdateR
   try {
     const { modelName, whereCondition, updateObject, logging = false } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     const updateData = await dataModel.update(updateObject, {
       where: whereCondition,
       logging,
@@ -106,7 +106,7 @@ export const addDataInTable = async (source: DataConditions) => {
   try {
     const { modelName, addObject, logging = false } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     await dataModel.create(addObject, {
       logging,
     });
@@ -124,7 +124,7 @@ export const bulkUpsertDataInTable = async (source: DataConditions) => {
   try {
     const { modelName, upsertObjects, updateColumns, logging = false } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     await dataModel.bulkCreate(upsertObjects, {
       updateOnDuplicate: updateColumns,
       logging,
@@ -146,7 +146,7 @@ export const bulkCreateDataInTable = async (source: DataConditions) => {
   try {
     const { modelName, upsertObjects, ignoreDuplicates, logging = false } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     await dataModel.bulkCreate(upsertObjects, {
       ...(ignoreDuplicates && { ignoreDuplicates }),
       logging,
@@ -168,7 +168,7 @@ export const deleteDataInTable = async (source: DataConditions) => {
   try {
     const { modelName, whereCondition, logging = false } = source;
 
-    const dataModel = pgsql.model(modelName);
+    const dataModel = pgSql.model(modelName);
     await dataModel.destroy({
       where: whereCondition,
       logging,

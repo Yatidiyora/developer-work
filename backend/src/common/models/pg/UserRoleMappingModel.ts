@@ -32,5 +32,5 @@ export const initUserRoleMappingModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.USER_ROLE_MAPPING,
     },
-  );
+  ).sync();
 };

@@ -27,5 +27,5 @@ export const initPermissionDetailsModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.PERMISSION_DETAILS,
     },
-  );
+  ).sync();;
 };

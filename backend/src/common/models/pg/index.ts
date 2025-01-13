@@ -13,8 +13,9 @@ const initPgDB = () => {
     PG_DB: { DATABASE, PORT, USERNAME, PASSWORD, HOST },
   } = getConfig();
 
-  sequelize = new Sequelize('postgres', 'postgres', 'Y@ti2611', {
-    host: 'localhost',
+  sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
+    schema: 'public',
+    host: HOST,
     port: 5432,
     logging: false,
     dialect: 'postgres',

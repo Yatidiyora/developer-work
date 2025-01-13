@@ -53,5 +53,5 @@ export const initUserDetailsModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.USER_DETAILS,
     },
-  );
+  ).sync();
 };

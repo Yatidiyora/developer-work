@@ -58,7 +58,7 @@ app.use(
   session({
     secret: SECRET_KEY,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
   }),
 );
 app.use(passport.initialize());

@@ -1,62 +1,81 @@
 import { NextFunction, Request, Response } from 'express';
-import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import md5 from 'md5';
 import moment from 'moment';
-import { MultiSamlStrategy } from 'passport-saml';
-import { SamlOptionsCallback } from 'passport-saml/lib/passport-saml/types';
+import { Strategy as GoogleStrategy  } from 'passport-google-oauth20';
 import querystring from 'querystring';
-import url from 'url';
 import getConfig from './common/config/config';
 import logger from './common/utils/Logger';
 import { UserDetailsModel } from './common/models/pg/UserDetailsModel';
+import { fetchExistingDataFromTableObject } from './common/types/constants/DbObjectConstants';
+import { DB_MODELS } from './common/types/enums/CommonEnums';
+import { commonDbExecution } from './common/service/DbService';
+import { GetDataResponse } from './common/types/interfaces/CommonDbTypes';
 
-export const samlStrategy = new MultiSamlStrategy(
+const {
+          SAML: { CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET },
+          FRONTEND: { AUTH_REDIRECT_URL },
+        } = getConfig();
+        console.log(CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
+        
+
+export const samlStrategy = new GoogleStrategy(
   {
-    getSamlOptions: function (request: Request<any, any, any, { RelayState: string }>, done: SamlOptionsCallback) {
-      const {
-        SAML: { CALLBACK_URL, ENTRY_POINT, ISSUER, IDP_LOGOUT_URL, SP_LOGOUT_CALLBACK, IPD_CERT },
-        FRONTEND: { AUTH_REDIRECT_URL },
-      } = getConfig();
-      done(null, {
-        // URL that goes from the Identity Provider -> Service Provider
-        callbackUrl: CALLBACK_URL,
-        // URL that goes from the Service Provider -> Identity Provider
-        entryPoint: ENTRY_POINT,
-        // Usually specified as `/shibboleth` from site root
-        issuer: ISSUER,
-        identifierFormat: null,
-        // Service Provider private key
-        decryptionPvk: fs.readFileSync(__dirname + '/../cert/key.pem', 'utf8'),
-        // Identity Provider's public key
-        cert: IPD_CERT ?? '',
-        validateInResponseTo: false,
-        signatureAlgorithm: 'sha512',
-        disableRequestedAuthnContext: true,
-        logoutUrl: IDP_LOGOUT_URL,
-        // logoutCallbackUrl: SP_LOGOUT_CALLBACK,
-        additionalParams: {
-          TargetResource: request.query.RelayState || (AUTH_REDIRECT_URL ?? ''),
-        },
-      });
-    },
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: CALLBACK_URL || '/api/auth/google/callback',
   },
-  (profile: any, done: any) => {
-    logger.debug('User profile info', profile);
-    return done(null, {
-      id: profile.id,
-      email: profile.email,
-      firstName: profile.firstname,
-      lastName: profile.lastname,
-      sessionIndex: profile.sessionIndex,
-      saml: {
-        nameID: profile.nameID,
-        nameIDFormat: profile.nameIDFormat,
-        token: profile.getAssertionXml(),
-      },
-    });
-  },
+  (accessToken, refreshToken, profile, done) => {
+    // Save user profile information to the session
+    done(null, profile);
+  }
 );
+// export const samlStrategy = new MultiSamlStrategy(
+//   {
+//     getSamlOptions: function (request: Request<any, any, any, { RelayState: string }>, done: SamlOptionsCallback) {
+//       const {
+//         SAML: { CALLBACK_URL, ENTRY_POINT, ISSUER, IDP_LOGOUT_URL, SP_LOGOUT_CALLBACK, IPD_CERT },
+//         FRONTEND: { AUTH_REDIRECT_URL },
+//       } = getConfig();
+//       done(null, {
+//         // URL that goes from the Identity Provider -> Service Provider
+//         callbackUrl: CALLBACK_URL,
+//         // URL that goes from the Service Provider -> Identity Provider
+//         entryPoint: ENTRY_POINT,
+//         // Usually specified as `/shibboleth` from site root
+//         issuer: ISSUER,
+//         identifierFormat: null,
+//         // Service Provider private key
+//         decryptionPvk: fs.readFileSync(__dirname + '/../cert/key.pem', 'utf8'),
+//         // Identity Provider's public key
+//         cert: IPD_CERT ?? '',
+//         validateInResponseTo: false,
+//         signatureAlgorithm: 'sha512',
+//         disableRequestedAuthnContext: true,
+//         logoutUrl: IDP_LOGOUT_URL,
+//         // logoutCallbackUrl: SP_LOGOUT_CALLBACK,
+//         additionalParams: {
+//           TargetResource: request.query.RelayState || (AUTH_REDIRECT_URL ?? ''),
+//         },
+//       });
+//     },
+//   },
+//   (profile: any, done: any) => {
+//     logger.debug('User profile info', profile);
+//     return done(null, {
+//       id: profile.id,
+//       email: profile.email,
+//       firstName: profile.firstname,
+//       lastName: profile.lastname,
+//       sessionIndex: profile.sessionIndex,
+//       saml: {
+//         nameID: profile.nameID,
+//         nameIDFormat: profile.nameIDFormat,
+//         token: profile.getAssertionXml(),
+//       },
+//     });
+//   },
+// );
 
 export const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) return next();
@@ -66,9 +85,10 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
 export const samlCallback = async (
   req: Request & {
     user: {
-      email: string;
-      firstName: string;
-      lastName: string;
+      // displayName: string;
+      emails: {value: string, verified: boolean}[];
+      // photos: {values: string}[];
+      // name: {familyName: string, givenName: string};
       saml: {
         nameID: string;
       };
@@ -85,29 +105,23 @@ export const samlCallback = async (
       TOKEN_EXPIRATION,
     } = getConfig();
 
+    
     const {
-      email,
-      saml: { nameID },
+      emails,
     } = req.user;
-    const user = await UserDetailsModel.findOne({
-      where: {
-        userName: nameID,
-      },
-    });
+    const userName = emails[0].verified && emails[0].value;
+    fetchExistingDataFromTableObject.modelName = DB_MODELS.UserDetailsModel;
+    fetchExistingDataFromTableObject.requiredWhereFields[0].conditionValue = {email: userName};
+    const { dataObject } = await commonDbExecution(fetchExistingDataFromTableObject) as GetDataResponse;
+    const user = dataObject as UserDetailsModel;
     const tokenMaxAge = new Date().getTime() + (TOKEN_MAX_AGE_VALUE_IN_HOURS as unknown as number) * 60 * 60 * 1000;
     const tokenNewMaxAgeDate = moment(tokenMaxAge).utc().toDate();
     if (!user) {
       logger.debug('User details not found  so redirect to fail page');
-      res.redirect('/login/fail');
+      return res.redirect('/login/fail');
     } else {
-      await UserDetailsModel.update(
-        { tokenMaxAge: tokenNewMaxAgeDate },
-        {
-          where: {
-            userName: nameID,
-          },
-        },
-      );
+      user.tokenMaxAge = tokenNewMaxAgeDate;
+      await user.save();
     }
 
     const token = jwt.sign({ id: user?.id, userName: user?.userName, email: user?.email }, SECRET_KEY, {
@@ -116,7 +130,7 @@ export const samlCallback = async (
 
     const payload = {
       token,
-      email: email,
+      email: userName,
       registered: true,
     };
 
@@ -127,7 +141,7 @@ export const samlCallback = async (
 
     res.cookie(`${hashedHostname}_token`, token, {
       maxAge: 3600 * 1000 * Number(TOKEN_MAX_AGE_VALUE_IN_HOURS),
-      domain,
+      domain: '',
     });
     if (/localhost/.test(relayState)) {
       res.setHeader('Cache-Control', 'no-cache, no store');

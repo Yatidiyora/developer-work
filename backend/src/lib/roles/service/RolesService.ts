@@ -28,7 +28,7 @@ import {
 import { Op } from 'sequelize';
 import { commonDbExecution } from '../../../common/service/DbService';
 import { RoleDetailsModel, RolePermissionDetailsModel } from '../../../common/models/pg';
-import { UPDATE_COLUMNS } from 'constants/UpsertConstants';
+import { UPDATE_COLUMNS } from '../../../common/types/constants/UpsertConstants';
 
 const logger = getCustomLogger('Role::RolesService');
 

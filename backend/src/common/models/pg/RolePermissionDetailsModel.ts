@@ -53,5 +53,5 @@ export const initRolePermissionDetailsModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.ROLE_PERMISSION_DETAILS,
     },
-  ).sync({ force: true });
+  ).sync();
 };

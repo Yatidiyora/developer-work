@@ -7,6 +7,8 @@ import {
   ERROR,
   DB_MODELS,
   DB_DATA_FUNCTIONS_TYPES,
+  COMMON_COLUMNS,
+  SORT,
 } from '../../../common/types/enums/CommonEnums';
 import { v4 as uuidv4 } from 'uuid';
 import { RequestQuery } from '../../../common/types/interfaces/UserInterface';
@@ -27,19 +29,18 @@ import {
 } from '../../../common/types/constants/DbObjectConstants';
 import { Op } from 'sequelize';
 import { commonDbExecution } from '../../../common/service/DbService';
-import { RoleDetailsModel, RolePermissionDetailsModel, UserRoleMappingModel } from '../../../common/models/pg';
-import { UPDATE_COLUMNS } from 'constants/UpsertConstants';
+import { RoleDetailsModel, UserRoleMappingModel } from '../../../common/models/pg';
 
 const logger = getCustomLogger('User::UserService');
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
-  const { size, offset, keyword, sortColumnName, sortOrder } = req.query as unknown as RequestQuery;
+  const { size, offset, keyword, sortColumnName = COMMON_COLUMNS.UPDATED_AT, sortOrder = SORT.DESC } = req.query as Partial<RequestQuery>;
   try {
     const paginationSource: DataConditions = paginationSourceObject;
     paginationSource.modelName = DB_MODELS.UserDetailsModel;
     paginationSource.requiredWhereFields[0].conditionValue = {
       [Op.or]: ['userName', 'firstName', 'lastName', 'email'].map((field) => ({
-        [field]: { [Op.substring]: keyword },
+        [field]: { [Op.like]: `%${keyword ?? ''}%` },
       })),
       isActive: 1,
     };
@@ -61,19 +62,20 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
 };
 
 export const fetchUserByUserName = async (req: Request, res: Response) => {
-  const { keyword, size, offset } = req.query;
+  const { keyword, size, offset, sortColumnName = COMMON_COLUMNS.UPDATED_AT, sortOrder = SORT.DESC } = req.query as Partial<RequestQuery>;
   try {
     const paginationSource: DataConditions = paginationSourceObject;
     paginationSource.modelName = DB_MODELS.UserDetailsModel;
     paginationSource.requiredWhereFields[0].conditionValue = {
       [Op.or]: ['userName', 'firstName', 'lastName', 'email'].map((field) => ({
-        [field]: { [Op.substring]: keyword },
+        [field]: { [Op.like]: `%${keyword ?? ''}%` },
       })),
       isActive: 1,
     };
     paginationSource.paginationData = {
       limit: Number(size) ?? 10,
       offset: Number(offset) ?? 0,
+      order: [[sortColumnName, sortOrder]],
     };
     paginationSource.requiredColumns = { exclude: ['password'] };
     const {
@@ -156,7 +158,6 @@ export const addUserAndUserroleToDb = async (req: Request, res: Response) => {
       email,
     };
     await commonDbExecution(createDataObject);
-    await Repository.addUserAndUserrole(req.body);
     fetchDataFromTableObject.modelName = DB_MODELS.RoleDetailsModel;
     fetchDataFromTableObject.requiredWhereFields[0].conditionValue = { id: roleIds };
     const { dataObjects: roles } = (await commonDbExecution(fetchDataFromTableObject)) as GetAllDataResponse;

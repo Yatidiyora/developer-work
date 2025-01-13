@@ -25,6 +25,7 @@ export interface DataConditions {
   requiredColumns?: FindAttributeOptions;
   group?: GroupOption;
   logging?: boolean;
+  raw?: boolean;
 }
 
 export interface UpdateResponse {
