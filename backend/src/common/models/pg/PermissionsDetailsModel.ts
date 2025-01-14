@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { TABLES } from '../../types/enums/CommonEnums';
 
 export class PermissionDetailsModel extends Model {
@@ -27,5 +27,5 @@ export const initPermissionDetailsModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.PERMISSION_DETAILS,
     },
-  ).sync();;
+  ).sync();
 };

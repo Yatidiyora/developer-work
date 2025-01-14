@@ -1,7 +1,7 @@
-import { getCustomLogger } from '../utils/Logger';
 import { WhereOptions } from 'sequelize';
 import { DB_DATA_FUNCTIONS, opConditions } from '../../common/types/constants/UserConstant';
 import { DataConditions, WhereField } from '../types/interfaces/CommonDbTypes';
+import { getCustomLogger } from '../utils/Logger';
 
 const logger = getCustomLogger('Common:Service:Db');
 

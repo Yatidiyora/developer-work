@@ -1,5 +1,5 @@
-import { DataConditions } from '../interfaces/CommonDbTypes';
 import { DB_DATA_FUNCTIONS_TYPES, SEQUELIZE_CONDITION_TYPES } from '../enums/CommonEnums';
+import { DataConditions } from '../interfaces/CommonDbTypes';
 
 const fetchDataFromTableObject: DataConditions = {
   modelName: '',
@@ -67,11 +67,5 @@ const deleteDataInTableObject: DataConditions = {
 };
 
 export {
-  fetchDataFromTableObject,
-  fetchAllDataFromTableObject,
-  paginationSourceObject,
-  fetchExistingDataFromTableObject,
-  updateDataInTableObject,
-  deleteDataInTableObject,
-  createDataObject,
+  createDataObject, deleteDataInTableObject, fetchAllDataFromTableObject, fetchDataFromTableObject, fetchExistingDataFromTableObject, paginationSourceObject, updateDataInTableObject
 };

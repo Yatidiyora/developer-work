@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { TABLES } from '../../types/enums/CommonEnums';
 
 export class UserRoleMappingModel extends Model {

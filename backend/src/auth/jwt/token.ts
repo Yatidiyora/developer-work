@@ -9,8 +9,8 @@ import { localUserDetailsArray } from '../../common/utils/localUserDetails';
 export const getToken = async (req: Request, res: Response) => {
   const { SECRET_KEY, TOKEN_EXPIRATION, AUTHENTICATION_KEY } = getConfig();
   const api_key = req.header('authorization-key');
-  console.log("api_key: ", api_key, "AUTHENTICATION_KEY: ", AUTHENTICATION_KEY, api_key === AUTHENTICATION_KEY);
-  
+  console.log('api_key: ', api_key, 'AUTHENTICATION_KEY: ', AUTHENTICATION_KEY, api_key === AUTHENTICATION_KEY);
+
   if (api_key === AUTHENTICATION_KEY) {
     const user = await validateUser(req);
     console.log('user: ', user);

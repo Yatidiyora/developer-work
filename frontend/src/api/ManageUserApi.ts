@@ -12,10 +12,19 @@ class ManageUserApi extends BaseApi {
     return ManageUserApi.instance;
   }
 
-  public async getUsers() {
+  public async getUsers(
+    size: number, 
+    offset: number, 
+    keyword?: string | null, 
+    colName?: string, 
+    sort?: string
+  ) {
     try {
       const response = await this.get(
-        `/users`,
+        `/user?size=${size}&offset=${offset}` + 
+        `${keyword ? `&keyword=${keyword}`: ''}` +
+        `${colName ? `&sortColumnName=${colName}`: ''}` +
+        `${sort ? `&sortOrder=${sort}`: ''}`,
       );
       return response.data;
     } catch (error: AxiosError | any) {

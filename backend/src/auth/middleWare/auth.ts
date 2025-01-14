@@ -1,5 +1,5 @@
 import passport from 'passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import getConfig from '../../common/config/config';
 
 export const jwtStrategy = () => {

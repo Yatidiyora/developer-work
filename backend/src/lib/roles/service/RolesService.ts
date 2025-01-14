@@ -1,34 +1,34 @@
 import { Request, Response } from 'express';
+import { Op } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
+import { RoleDetailsModel, RolePermissionDetailsModel } from '../../../common/models/pg';
+import { commonDbExecution } from '../../../common/service/DbService';
 import {
-  STATUS_MESSAGE,
-  ERROR,
-  STATUS_CODE,
-  DB_MODELS,
-  SORT,
+  deleteDataInTableObject,
+  fetchDataFromTableObject,
+  fetchExistingDataFromTableObject,
+  paginationSourceObject,
+  updateDataInTableObject,
+} from '../../../common/types/constants/DbObjectConstants';
+import { UPDATE_COLUMNS } from '../../../common/types/constants/UpsertConstants';
+import {
   COMMON_COLUMNS,
   DB_DATA_FUNCTIONS_TYPES,
+  DB_MODELS,
+  ERROR,
+  SORT,
+  STATUS_CODE,
+  STATUS_MESSAGE,
 } from '../../../common/types/enums/CommonEnums';
-import { RolePermission, RolePermissionsById } from '../../../common/types/interfaces/RolePermission';
-import { getCustomLogger } from '../../../common/utils/Logger';
-import { RequestQuery } from '../../../common/types/interfaces/UserInterface';
 import {
   DataConditions,
   GetAllDataResponse,
   GetDataResponse,
   GetPaginationDataResponse,
 } from '../../../common/types/interfaces/CommonDbTypes';
-import {
-  fetchDataFromTableObject,
-  paginationSourceObject,
-  fetchExistingDataFromTableObject,
-  deleteDataInTableObject,
-  updateDataInTableObject,
-} from '../../../common/types/constants/DbObjectConstants';
-import { Op } from 'sequelize';
-import { commonDbExecution } from '../../../common/service/DbService';
-import { RoleDetailsModel, RolePermissionDetailsModel } from '../../../common/models/pg';
-import { UPDATE_COLUMNS } from '../../../common/types/constants/UpsertConstants';
+import { RolePermission, RolePermissionsById } from '../../../common/types/interfaces/RolePermission';
+import { RequestQuery } from '../../../common/types/interfaces/UserInterface';
+import { getCustomLogger } from '../../../common/utils/Logger';
 
 const logger = getCustomLogger('Role::RolesService');
 
@@ -144,20 +144,22 @@ export const addRoleToDb = async (req: Request, res: Response) => {
       functionType: DB_DATA_FUNCTIONS_TYPES.addDataInTable,
     };
     await commonDbExecution(roleSource);
-    const newRolePermissions = (permissions as RolePermission[]).map(({ permissionId, permissionName, view, edit, delete: isDelete }) => ({
-      roleId: rolePermissionId,
-      permissionId: permissionId,
-      permissionName: permissionName,
-      view: view,
-      edit: edit,
-      delete: isDelete,
-    }));
+    const newRolePermissions = (permissions as RolePermission[]).map(
+      ({ permissionId, permissionName, view, edit, delete: isDelete }) => ({
+        roleId: rolePermissionId,
+        permissionId: permissionId,
+        permissionName: permissionName,
+        view: view,
+        edit: edit,
+        delete: isDelete,
+      }),
+    );
     const permissionSource: DataConditions = {
       modelName: DB_MODELS.RolePermissionDetailsModel,
       functionType: DB_DATA_FUNCTIONS_TYPES.bulkCreateDataInTable,
       upsertObjects: newRolePermissions,
       ignoreDuplicates: true,
-    }
+    };
     await commonDbExecution(permissionSource);
     res.status(STATUS_CODE.SUCCESS).json({ message: STATUS_MESSAGE.ROLE_CREATED, status: STATUS_MESSAGE.SUCCESS });
   } catch (error) {
@@ -180,10 +182,10 @@ export const deleteRoleFromDb = async (req: Request, res: Response) => {
   try {
     const deleteRoleSource: DataConditions = deleteDataInTableObject;
     deleteRoleSource.modelName = DB_MODELS.RoleDetailsModel;
-    deleteRoleSource.requiredWhereFields[0].conditionValue = {id};
+    deleteRoleSource.requiredWhereFields[0].conditionValue = { id };
     await commonDbExecution(deleteRoleSource);
     deleteRoleSource.modelName = DB_MODELS.RolePermissionDetailsModel;
-    deleteRoleSource.requiredWhereFields[0].conditionValue = {roleId: id};
+    deleteRoleSource.requiredWhereFields[0].conditionValue = { roleId: id };
     await commonDbExecution(deleteRoleSource);
     res.status(STATUS_CODE.SUCCESS).json({ message: STATUS_MESSAGE.ROLE_DELETED, status: STATUS_MESSAGE.SUCCESS });
   } catch (error) {
@@ -204,22 +206,24 @@ export const updateRoleToDb = async (req: Request, res: Response) => {
   try {
     const rolePermissionId = uuidv4();
     const roleSource: DataConditions = updateDataInTableObject;
-    roleSource.requiredWhereFields[0].conditionValue = {id};
+    roleSource.requiredWhereFields[0].conditionValue = { id };
     await commonDbExecution(roleSource);
-    const updatedRolePermissions = (permissions as RolePermission[]).map(({ permissionId, permissionName, view, edit, delete: isDelete }) => ({
-      roleId: rolePermissionId,
-      permissionId: permissionId,
-      permissionName: permissionName,
-      view: view,
-      edit: edit,
-      delete: isDelete,
-    }));
+    const updatedRolePermissions = (permissions as RolePermission[]).map(
+      ({ permissionId, permissionName, view, edit, delete: isDelete }) => ({
+        roleId: rolePermissionId,
+        permissionId: permissionId,
+        permissionName: permissionName,
+        view: view,
+        edit: edit,
+        delete: isDelete,
+      }),
+    );
     const permissionSource: DataConditions = {
       modelName: DB_MODELS.RolePermissionDetailsModel,
       functionType: DB_DATA_FUNCTIONS_TYPES.bulkUpsertDataInTable,
       upsertObjects: updatedRolePermissions,
       updateColumns: UPDATE_COLUMNS.ROLE_PERMISSIONS,
-    }
+    };
     await commonDbExecution(permissionSource);
     res.status(STATUS_CODE.SUCCESS).json({ message: STATUS_MESSAGE.ROLE_UPDATED, status: STATUS_MESSAGE.SUCCESS });
   } catch (error) {

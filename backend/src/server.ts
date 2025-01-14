@@ -1,5 +1,5 @@
-import errorHandler from 'errorhandler';
 import dotenv from 'dotenv';
+import errorHandler from 'errorhandler';
 import { getCustomLogger } from './common/utils/Logger';
 dotenv.config();
 const logger = getCustomLogger('server');

@@ -1,16 +1,16 @@
-import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import express from 'express';
+import session from 'express-session';
+import helmet from 'helmet';
 import lusca from 'lusca';
 import morgan from 'morgan';
-import helmet from 'helmet';
 import passport from 'passport';
-import cors from 'cors';
-import session from 'express-session';
-import route from './routes';
-import { getCustomLogger } from './common/utils/Logger';
 import getConfig from './common/config/config';
 import { initAuroraDB } from './common/models/pg';
 import { loadSystemConfiguration } from './common/repository/ConfigurationRepository';
+import { getCustomLogger } from './common/utils/Logger';
+import route from './routes';
 import { samlStrategy } from './samlStrategy';
 
 const logger = getCustomLogger('app');

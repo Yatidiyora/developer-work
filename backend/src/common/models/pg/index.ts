@@ -1,10 +1,10 @@
 import { Sequelize } from 'sequelize';
 import getConfig from '../../config/config';
-import { initConfigurationDetailsModel, ConfigurationDetailsModel } from './ConfigurationDetailsModel';
-import { initUserDetailsModel, UserDetailsModel } from './UserDetailsModel';
-import { initRolePermissionDetailsModel, RolePermissionDetailsModel } from './RolePermissionDetailsModel';
-import { initRoleDetailsModel, RoleDetailsModel } from './RoleDetailsModel';
+import { ConfigurationDetailsModel, initConfigurationDetailsModel } from './ConfigurationDetailsModel';
 import { initPermissionDetailsModel, PermissionDetailsModel } from './PermissionsDetailsModel';
+import { initRoleDetailsModel, RoleDetailsModel } from './RoleDetailsModel';
+import { initRolePermissionDetailsModel, RolePermissionDetailsModel } from './RolePermissionDetailsModel';
+import { initUserDetailsModel, UserDetailsModel } from './UserDetailsModel';
 import { initUserRoleMappingModel, UserRoleMappingModel } from './UserRoleMappingModel';
 
 let sequelize: Sequelize;
@@ -38,12 +38,5 @@ const initPgDB = () => {
 };
 
 export {
-  initPgDB as initAuroraDB,
-  sequelize,
-  ConfigurationDetailsModel,
-  UserDetailsModel,
-  RolePermissionDetailsModel,
-  RoleDetailsModel,
-  PermissionDetailsModel,
-  UserRoleMappingModel,
+  ConfigurationDetailsModel, initPgDB as initAuroraDB, PermissionDetailsModel, RoleDetailsModel, RolePermissionDetailsModel, sequelize, UserDetailsModel, UserRoleMappingModel
 };

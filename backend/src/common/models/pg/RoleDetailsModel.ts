@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { TABLES } from '../../types/enums/CommonEnums';
 
 export class RoleDetailsModel extends Model {
@@ -32,5 +32,5 @@ export const initRoleDetailsModel = (sequelize: Sequelize) => {
       underscored: true,
       tableName: TABLES.ROLE_DETAILS,
     },
-  ).sync();;
+  ).sync();
 };

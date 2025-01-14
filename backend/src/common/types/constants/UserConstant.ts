@@ -1,13 +1,13 @@
 import { Op } from 'sequelize';
 import {
   addDataInTable,
-  fetchDataFromTableWithPagination,
-  fetchExistingDataFromTable,
-  fetchDataFromTable,
-  updateDataInTable,
+  bulkCreateDataInTable,
   bulkUpsertDataInTable,
   deleteDataInTable,
-  bulkCreateDataInTable,
+  fetchDataFromTable,
+  fetchDataFromTableWithPagination,
+  fetchExistingDataFromTable,
+  updateDataInTable,
 } from '../../../common/repository/DbRepository';
 
 export const opConditions: { [key: string]: symbol } = {

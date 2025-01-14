@@ -2,22 +2,21 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import md5 from 'md5';
 import moment from 'moment';
-import { Strategy as GoogleStrategy  } from 'passport-google-oauth20';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import querystring from 'querystring';
 import getConfig from './common/config/config';
-import logger from './common/utils/Logger';
 import { UserDetailsModel } from './common/models/pg/UserDetailsModel';
+import { commonDbExecution } from './common/service/DbService';
 import { fetchExistingDataFromTableObject } from './common/types/constants/DbObjectConstants';
 import { DB_MODELS } from './common/types/enums/CommonEnums';
-import { commonDbExecution } from './common/service/DbService';
 import { GetDataResponse } from './common/types/interfaces/CommonDbTypes';
+import logger from './common/utils/Logger';
 
 const {
-          SAML: { CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET },
-          FRONTEND: { AUTH_REDIRECT_URL },
-        } = getConfig();
-        console.log(CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
-        
+  SAML: { CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET },
+  FRONTEND: { AUTH_REDIRECT_URL },
+} = getConfig();
+console.log(CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
 
 export const samlStrategy = new GoogleStrategy(
   {
@@ -28,7 +27,7 @@ export const samlStrategy = new GoogleStrategy(
   (accessToken, refreshToken, profile, done) => {
     // Save user profile information to the session
     done(null, profile);
-  }
+  },
 );
 // export const samlStrategy = new MultiSamlStrategy(
 //   {
@@ -86,7 +85,7 @@ export const samlCallback = async (
   req: Request & {
     user: {
       // displayName: string;
-      emails: {value: string, verified: boolean}[];
+      emails: { value: string; verified: boolean }[];
       // photos: {values: string}[];
       // name: {familyName: string, givenName: string};
       saml: {
@@ -105,14 +104,11 @@ export const samlCallback = async (
       TOKEN_EXPIRATION,
     } = getConfig();
 
-    
-    const {
-      emails,
-    } = req.user;
+    const { emails } = req.user;
     const userName = emails[0].verified && emails[0].value;
     fetchExistingDataFromTableObject.modelName = DB_MODELS.UserDetailsModel;
-    fetchExistingDataFromTableObject.requiredWhereFields[0].conditionValue = {email: userName};
-    const { dataObject } = await commonDbExecution(fetchExistingDataFromTableObject) as GetDataResponse;
+    fetchExistingDataFromTableObject.requiredWhereFields[0].conditionValue = { email: userName };
+    const { dataObject } = (await commonDbExecution(fetchExistingDataFromTableObject)) as GetDataResponse;
     const user = dataObject as UserDetailsModel;
     const tokenMaxAge = new Date().getTime() + (TOKEN_MAX_AGE_VALUE_IN_HOURS as unknown as number) * 60 * 60 * 1000;
     const tokenNewMaxAgeDate = moment(tokenMaxAge).utc().toDate();

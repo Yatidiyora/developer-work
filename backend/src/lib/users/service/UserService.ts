@@ -1,40 +1,45 @@
-import * as Repository from '../repository/UserRepository';
-import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
-import {
-  STATUS_MESSAGE,
-  STATUS_CODE,
-  ERROR,
-  DB_MODELS,
-  DB_DATA_FUNCTIONS_TYPES,
-  COMMON_COLUMNS,
-  SORT,
-} from '../../../common/types/enums/CommonEnums';
+import Joi from 'joi';
+import { Op } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
-import { RequestQuery } from '../../../common/types/interfaces/UserInterface';
-import { getCustomLogger } from '../../../common/utils/Logger';
+import { RoleDetailsModel, UserRoleMappingModel } from '../../../common/models/pg';
+import { commonDbExecution } from '../../../common/service/DbService';
+import {
+  createDataObject,
+  deleteDataInTableObject,
+  fetchDataFromTableObject,
+  fetchExistingDataFromTableObject,
+  paginationSourceObject,
+  updateDataInTableObject,
+} from '../../../common/types/constants/DbObjectConstants';
+import {
+  COMMON_COLUMNS,
+  DB_DATA_FUNCTIONS_TYPES,
+  DB_MODELS,
+  ERROR,
+  SORT,
+  STATUS_CODE,
+  STATUS_MESSAGE,
+} from '../../../common/types/enums/CommonEnums';
 import {
   DataConditions,
   GetAllDataResponse,
   GetDataResponse,
   GetPaginationDataResponse,
 } from '../../../common/types/interfaces/CommonDbTypes';
-import {
-  fetchDataFromTableObject,
-  paginationSourceObject,
-  fetchExistingDataFromTableObject,
-  deleteDataInTableObject,
-  updateDataInTableObject,
-  createDataObject,
-} from '../../../common/types/constants/DbObjectConstants';
-import { Op } from 'sequelize';
-import { commonDbExecution } from '../../../common/service/DbService';
-import { RoleDetailsModel, UserRoleMappingModel } from '../../../common/models/pg';
+import { RequestQuery } from '../../../common/types/interfaces/UserInterface';
+import { getCustomLogger } from '../../../common/utils/Logger';
 
 const logger = getCustomLogger('User::UserService');
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
-  const { size, offset, keyword, sortColumnName = COMMON_COLUMNS.UPDATED_AT, sortOrder = SORT.DESC } = req.query as Partial<RequestQuery>;
+  const {
+    size,
+    offset,
+    keyword,
+    sortColumnName = COMMON_COLUMNS.UPDATED_AT,
+    sortOrder = SORT.DESC,
+  } = req.query as Partial<RequestQuery>;
   try {
     const paginationSource: DataConditions = paginationSourceObject;
     paginationSource.modelName = DB_MODELS.UserDetailsModel;
@@ -62,7 +67,13 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
 };
 
 export const fetchUserByUserName = async (req: Request, res: Response) => {
-  const { keyword, size, offset, sortColumnName = COMMON_COLUMNS.UPDATED_AT, sortOrder = SORT.DESC } = req.query as Partial<RequestQuery>;
+  const {
+    keyword,
+    size,
+    offset,
+    sortColumnName = COMMON_COLUMNS.UPDATED_AT,
+    sortOrder = SORT.DESC,
+  } = req.query as Partial<RequestQuery>;
   try {
     const paginationSource: DataConditions = paginationSourceObject;
     paginationSource.modelName = DB_MODELS.UserDetailsModel;
@@ -190,10 +201,10 @@ export const deleteUserFromDb = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     deleteDataInTableObject.modelName = DB_MODELS.UserDetailsModel;
-    deleteDataInTableObject.requiredWhereFields[0].conditionValue = {id};
+    deleteDataInTableObject.requiredWhereFields[0].conditionValue = { id };
     await commonDbExecution(deleteDataInTableObject);
     deleteDataInTableObject.modelName = DB_MODELS.UserRoleMappingModel;
-    deleteDataInTableObject.requiredWhereFields[0].conditionValue = {userId: id};
+    deleteDataInTableObject.requiredWhereFields[0].conditionValue = { userId: id };
     await commonDbExecution(deleteDataInTableObject);
     res.status(STATUS_CODE.SUCCESS).json({ message: STATUS_MESSAGE.USER_DELETED, status: STATUS_MESSAGE.SUCCESS });
   } catch (error) {
@@ -219,16 +230,16 @@ export const updateUserToDb = async (req: Request, res: Response) => {
       email: email,
     };
     updateDataInTableObject.modelName = DB_MODELS.UserDetailsModel;
-    updateDataInTableObject.requiredWhereFields[0].conditionValue = {id};
+    updateDataInTableObject.requiredWhereFields[0].conditionValue = { id };
     //Update the user
     await commonDbExecution(updateDataInTableObject);
 
     if (roles) {
       //Fetching all the assigned roles and get the roleIds
       const rolesSource: DataConditions = fetchDataFromTableObject;
-    rolesSource.modelName = DB_MODELS.UserRoleMappingModel;
-    rolesSource.requiredWhereFields[0].conditionValue = { userId: id };
-    const { dataObjects: rolesAndUsers } = (await commonDbExecution(rolesSource)) as GetAllDataResponse;
+      rolesSource.modelName = DB_MODELS.UserRoleMappingModel;
+      rolesSource.requiredWhereFields[0].conditionValue = { userId: id };
+      const { dataObjects: rolesAndUsers } = (await commonDbExecution(rolesSource)) as GetAllDataResponse;
       // const rolesAndUsers = await fetchRoles(id);
       const roleIds = (rolesAndUsers as UserRoleMappingModel[]).map(({ roleId }) => roleId);
 
@@ -243,7 +254,7 @@ export const updateUserToDb = async (req: Request, res: Response) => {
         roleId: {
           [Op.in]: rolesToDelete,
         },
-      }
+      };
       await commonDbExecution(deleteDataInTableObject);
       const newRoles = rolesToAdd.map((role: string) => {
         return { id: uuidv4(), userId: id, roleId: role };

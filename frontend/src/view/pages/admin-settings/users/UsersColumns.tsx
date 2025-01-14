@@ -1,21 +1,23 @@
 import moment from 'moment';
+import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { RiEditLine } from 'react-icons/ri';
-import { PermissionIds } from '../../../api/Permissions.type';
-import { usePermission } from '../../../hooks/usePermission';
+import { ACTION_TYPE, FORMAT } from '../../../../common/types/enum/CommonEnum';
 
 const userColumns = ({
     setAction
 }: {
-    setAction: 
+    setAction: React.Dispatch<React.SetStateAction<{
+      user: any;
+      actionType: any;
+  } | undefined>> 
 }) => {
   const formatDate = (date: Date): string => {
-    const format = moment(date).utc().format('MM-DD-YYYY HH:mm:ss');
+    const format = date ? moment(date).utc().format(FORMAT.NORAML_DATE) : 'N/A';
     return format;
   };
-  const { rolePermissions: userPermissions } = usePermission(PermissionIds.MANAGE_USERS);
 
   return [
     {
@@ -23,12 +25,10 @@ const userColumns = ({
       button: true,
       cell: (row: any) => (
         <DropdownButton id="dropdown-item-button" title="Action">
-          {userPermissions.edit && (
             <Dropdown.Item
-              onClick={() => {
-                setShowEdit(true);
-                setUserUpdateId(row.id);
-              }}
+            onClick={() => {
+              setAction({user: row, actionType: ACTION_TYPE.EDIT})
+            }}
               as="button"
             >
               <i className="dropdown-icon">
@@ -36,15 +36,7 @@ const userColumns = ({
               </i>
               Edit
             </Dropdown.Item>
-          )}
-
-          {userPermissions.delete && (
             <Dropdown.Item
-              onClick={() => {
-                setShowDelete(true);
-                setUserDeleteId(row.id);
-                setUserName(row.userName);
-              }}
               as="button"
             >
               <i className="dropdown-icon">
@@ -52,7 +44,6 @@ const userColumns = ({
               </i>
               Delete
             </Dropdown.Item>
-          )}
         </DropdownButton>
       ),
     },
