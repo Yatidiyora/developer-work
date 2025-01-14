@@ -53,6 +53,9 @@ const Sidebar = ({
                       ? "bi bi-chevron-compact-up"
                       : "bi bi-chevron-compact-down"
                   }`}
+                  style={{
+                    color: '#33FFEC'
+                  }}
                 ></span>
               </button>
             )}
@@ -118,10 +121,16 @@ const Sidebar = ({
   };
 
   return (
-    <div className="sidebar">
+    <div 
+      className="sidebar" 
+      style={{
+        backgroundImage: "url('/images/sidebar-bg.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+      }}>
       <div
         style={{
-          marginBottom: "40px",
           fontSize: "35px",
           display: "flex",
           flexDirection: "row",
@@ -145,7 +154,7 @@ const Sidebar = ({
               paddingTop: "0px",
               paddingBottom: "0px",
               marginRight: collapse ? "-39px" : "-21px",
-              background: collapse ? "#FFFFFF" : "#F2F2F1",
+              background: "#00E5FF",
               ...(!collapse
                 ? { borderTopLeftRadius: "6px" }
                 : { borderTopRightRadius: "6px" }),

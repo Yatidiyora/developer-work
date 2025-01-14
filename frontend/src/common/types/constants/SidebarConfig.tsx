@@ -1,6 +1,11 @@
 import { RiDashboardLine } from "react-icons/ri";
 import { SidebarConfig } from "../interface/Layouts.interface";
 import CustomerCRM from "../../../view/pages/cstomer-crm/CustomerCRM";
+import Users from '../../../view/pages/admin-settings/users/Users';
+import Roles from '../../../view/pages/admin-settings/roles/Roles';
+import { GrUserAdmin } from "react-icons/gr";
+import { MdAssignmentInd } from "react-icons/md";
+import { FaUserGear } from "react-icons/fa6";
 import React from "react";
 
 // Sidebar and Route Configuration
@@ -11,22 +16,22 @@ export const sidebarConfig: SidebarConfig[] = [
     component: () => <CustomerCRM />,
     icon: () => <RiDashboardLine size={24}/>,
   },
-  // {
-  //   label: "Client Activities",
-  //   icon: () => <TbFileDots size={24}/>,
-  //   children: [
-  //     {
-  //       label: "Client Activities1",
-  //       path: "/client-activities2",
-  //       icon: () => <FaMoneyBills size={24}/>,
-  //       component: () => <FinanceDetails />,
-  //     },
-  //     {
-  //       label: "Client Activities1",
-  //       path: "/client-activities1",
-  //       icon: () => <FaMoneyBills size={24}/>,
-  //       component: () => <FinanceDetails />,
-  //     },
-  //   ],
-  // },
+  {
+    label: "Admin Settings",
+    icon: () => <GrUserAdmin size={24}/>,
+    children: [
+      {
+        label: "Users Management",
+        path: "/manage-users",
+        icon: () => <FaUserGear size={24}/>,
+        component: () => <Users />,
+      },
+      {
+        label: "Role Management",
+        path: "/manage-roles",
+        icon: () => <MdAssignmentInd size={24}/>,
+        component: () => <Roles />,
+      },
+    ],
+  },
 ];
