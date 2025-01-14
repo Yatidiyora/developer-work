@@ -8,6 +8,10 @@ import axios, {
 // import { getCookie, removeCookie } from 'typescript-cookie';
 // import { WFM_SYNC_BANYAN_AUTH_TOKEN_ID } from '../utils/constants/RoutesPath';
 import getConfig from '../common/config/Config';
+import { getCookie } from 'typescript-cookie';
+
+console.log('getConfig().BACKEND.BACKEND_API: ', getConfig().BACKEND.BACKEND_API);
+
 
 export class BaseApi {
   private axiosInstance: AxiosInstance;
@@ -26,7 +30,7 @@ export class BaseApi {
     config: InternalAxiosRequestConfig,
   ): Promise<InternalAxiosRequestConfig> {
     // You can customize the request config here, for example by adding an authentication token to the headers.
-    // config.headers['token'] = [getCookie(WFM_SYNC_BANYAN_AUTH_TOKEN_ID)];
+    config.headers['token'] = [getCookie(getConfig().FRONTEND.DELELOPER_WORK_AUTH_TOKEN_ID)];
     return config;
   }
 

@@ -84,10 +84,10 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
 export const samlCallback = async (
   req: Request & {
     user: {
-      // displayName: string;
+      displayName: string;
       emails: { value: string; verified: boolean }[];
-      // photos: {values: string}[];
-      // name: {familyName: string, givenName: string};
+      photos: {values: string}[];
+      name: {familyName: string, givenName: string};
       saml: {
         nameID: string;
       };
@@ -141,7 +141,7 @@ export const samlCallback = async (
     });
     if (/localhost/.test(relayState)) {
       res.setHeader('Cache-Control', 'no-cache, no store');
-      res.redirect(relayState + '?' + querystring.stringify(payload));
+      res.redirect(relayState);
     } else {
       res.setHeader('Cache-Control', 'no-cache, no store');
       res.redirect(relayState);

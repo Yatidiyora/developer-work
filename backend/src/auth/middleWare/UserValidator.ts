@@ -1,7 +1,7 @@
 import { DataConditions, GetDataResponse } from 'interfaces/CommonDbTypes';
 import { DB_MODELS, STATUS_CODE } from '../../common/types/enums/CommonEnums';
 import { Request } from 'express';
-import { fetchExistingDataFromTableObject } from 'constants/DbObjectConstants';
+import { fetchExistingDataFromTableObject } from '../../common/types/constants/DbObjectConstants';
 import { commonDbExecution } from '../../common/service/DbService';
 import { UserDetailsModel } from '../../common/models/pg';
 

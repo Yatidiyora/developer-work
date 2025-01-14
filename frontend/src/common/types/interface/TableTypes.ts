@@ -1,6 +1,5 @@
 export interface ColumnTypeOne {
   name: string;
-  button: boolean;
   cell: (row: any) => JSX.Element;
   selector?: (row: any) => any;
   wrap?: boolean;

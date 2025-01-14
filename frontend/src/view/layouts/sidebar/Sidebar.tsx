@@ -64,10 +64,9 @@ const Sidebar = ({
             {item.children.map((child, index) => {
               const onClickFunction = child.onClick ? child.onClick : () => {};
               return (
-                <div>
+                <div key={index}>
                   <div className="sidebar-arrow"></div>
                   <li
-                    key={index}
                     className={`sidebar-subitem ${
                       activePath === child.path ? "active" : ""
                     }`}

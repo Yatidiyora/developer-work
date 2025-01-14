@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import DataTable, { TableStyles } from 'react-data-table-component';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { TableRequireData } from '../../common/types/interface/TableTypes';
 
@@ -17,6 +17,7 @@ export const DynamicDataTable: FunctionComponent<TableRequireData> = (props) => 
     uniqIdentifier,
     filterTextOff,
   } = props;
+
   let { keyword, size, offset, columnName, colOrder } = {
     keyword: '',
     size: 10,
@@ -24,6 +25,7 @@ export const DynamicDataTable: FunctionComponent<TableRequireData> = (props) => 
     columnName: '',
     colOrder: '',
   };
+
   if (filterTextValue) {
     const { keyword: key, size: sz, offset: os, colName: cn, colOrder: co } = filterTextValue;
     keyword = key;
@@ -32,6 +34,7 @@ export const DynamicDataTable: FunctionComponent<TableRequireData> = (props) => 
     columnName = cn;
     colOrder = co;
   }
+
   const [data, setData] = useState([]);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(size ?? 10);
@@ -81,7 +84,7 @@ export const DynamicDataTable: FunctionComponent<TableRequireData> = (props) => 
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchUsers(page); // fetch page  of users
+      fetchUsers(page);
     }, 500);
 
     return () => clearTimeout(timer);
@@ -93,47 +96,38 @@ export const DynamicDataTable: FunctionComponent<TableRequireData> = (props) => 
     };
 
     return (
-      <div className="d-flex align-items-center justify-content-between data-search">
-        <div className="d-flex">
+      <div className="table-header">
+        <div className="search-container">
           {!filterTextOff && (
-            <div className="m-input-icon">
+            <div className="search-box">
               <input
                 id="search"
                 type="text"
+                style={{
+                  width: searchWidth ??'300px'
+                }}
                 placeholder={filterDefaultText}
                 aria-label="Search Input"
                 value={filterText ?? ''}
                 onChange={(e) => handleChange(e.target.value)}
-                style={searchWidth ? { minWidth: searchWidth } : undefined}
-                className="form-control d-inline-block w-search"
+                className="search-input"
               />
-              <span className="m-input-icon-l">
+              <span className="search-icon">
                 <AiOutlineSearch />
               </span>
             </div>
           )}
         </div>
-        <div className="justify-content-end d-flex">
+        <div className="button-group">
           {refreshOption && (
-            <div>
-              <button className="btn btn-primary" onClick={() => fetchUsers(page)} type="button">
-                Refresh
-              </button>
-            </div>
+            <button className="btn-refresh" onClick={() => fetchUsers(page)}>
+              Refresh
+            </button>
           )}
-          {downloadOption && (
-            <div>
-              {downloadOption.isDownload && (
-                <button
-                  type="button"
-                  value="button"
-                  onClick={downloadOption.download}
-                  className="btn btn-primary"
-                >
-                  Download
-                </button>
-              )}
-            </div>
+          {downloadOption && downloadOption.isDownload && (
+            <button className="btn-download" onClick={downloadOption.download}>
+              Download
+            </button>
           )}
         </div>
       </div>
@@ -145,79 +139,88 @@ export const DynamicDataTable: FunctionComponent<TableRequireData> = (props) => 
     setSort(sortDirection);
   };
 
-  const customStyles = {
+  const customStyles: TableStyles = {
     table: {
       style: {
-        minHeight: '260px',
+        background: 'transparent',
+        // border: '1px solid #00E5FF',
+        minHeight: '200px',
+        borderRadius: '8px',
+      },
+    },
+    subHeader: {
+      style: {
+        display: 'flex',
+        justifyContent: 'start',
+        color: '#ffffff',
+        backgroundColor: '#1A1A2E',
+        borderTopLeftRadius: '8px',
+        borderTopRightRadius: '8px',
+      }
+    },
+    pagination: {
+      style: {
+        backgroundColor: '#1A1A2E',
+        borderBottomLeftRadius: '8px',
+        borderBottomRightRadius: '8px',
+        color: '#ffffff',
       },
     },
     rows: {
       style: {
-        minHeight: '50px', // override the row height
+        minHeight: '50px',
+        color: '#ffffff',
+        backgroundColor: '#1A1A2E',
+        borderBottom: '1px solid #ffffff', 
+        transition: '0.3s',
+        '&:hover': {
+          backgroundColor: '#162447',
+          // transform: 'scale(1.01)',
+        },
       },
     },
     headCells: {
       style: {
-        paddingLeft: '1px', // override the cell padding for head cells
-        paddingRight: '1px',
-        background: '#f1f1f1',
-        fontSize: '13px',
+        background: '#0F3460',
+        color: '#00E5FF',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        textTransform: 'uppercase' as 'uppercase', // ✅ Explicitly cast to a valid type
+        padding: '12px',
       },
     },
     cells: {
       style: {
-        paddingLeft: '1px', // override the cell padding for data cells
-        paddingRight: '1px',
         fontSize: '13px',
+        padding: '10px',
+        color: '#ffffff',
       },
     },
   };
+  
 
   return (
-    <div>
-      {subHeaderOff !== undefined && subHeaderOff ? (
-        <DataTable
-          columns={columns}
-          data={data}
-          onSort={handleSort}
-          keyField={uniqIdentifier ?? 'id'}
-          sortServer
-          pagination
-          defaultSortFieldId={colName ?? undefined}
-          defaultSortAsc={colOrder === 'desc' ? false : colOrder === 'asc' ? true : undefined}
-          paginationPerPage={perPage}
-          paginationDefaultPage={offset ? offset / size + 1 : undefined}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          paginationServer
-          paginationTotalRows={totalRows}
-          persistTableHead
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-          customStyles={customStyles}
-        />
-      ) : (
-        <DataTable
-          columns={columns}
-          data={data}
-          onSort={handleSort}
-          keyField={uniqIdentifier ?? 'id'}
-          sortServer
-          pagination
-          defaultSortFieldId={colName ?? undefined}
-          defaultSortAsc={colOrder === 'desc' ? false : colOrder === 'asc' ? true : undefined}
-          paginationPerPage={perPage}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          paginationServer
-          paginationDefaultPage={offset ? offset / size + 1 : undefined}
-          paginationTotalRows={totalRows}
-          subHeader
-          subHeaderComponent={subHeaderComponentMemo}
-          persistTableHead
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-          customStyles={customStyles}
-        />
-      )}
+    <div className="data-table-container">
+      <DataTable
+        columns={columns}
+        data={data}
+        onSort={handleSort}
+        keyField={uniqIdentifier ?? 'id'}
+        sortServer
+        pagination
+        defaultSortFieldId={colName ?? undefined}
+        defaultSortAsc={colOrder === 'desc' ? false : colOrder === 'asc' ? true : undefined}
+        paginationPerPage={perPage}
+        paginationRowsPerPageOptions={[10, 20, 50, 100]}
+        paginationServer
+        paginationTotalRows={totalRows}
+        subHeader={!subHeaderOff}
+        subHeaderComponent={subHeaderComponentMemo}
+        persistTableHead
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+        customStyles={customStyles}
+      />
     </div>
   );
 };

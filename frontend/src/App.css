@@ -136,7 +136,8 @@ html, body {
 .app-content {
   flex: 1;
   /* padding: 20px; */
-  background-color: rgb(242 242 241 / 99%);
+  background: linear-gradient(135deg, #0F172A 30%, #101820 100%);
+  color: #ffffff; /* White text */
   overflow-y: auto;
 }
 
@@ -487,8 +488,6 @@ html, body {
 
 .user-management {
   padding: 20px;
-  color: #ffffff; /* White text */
-  background: linear-gradient(135deg, #0F172A 30%, #101820 100%);
   height: 100vh; /* Full viewport height */
   display: flex;
   flex-direction: column;
@@ -540,43 +539,109 @@ html, body {
   width: 100% !important;
 }
 
-.rdt_TableHeader {
-  padding-left: 2px !important;
+/* Overall container */
+.data-table-container {
+  padding: 15px;
+  border-radius: 10px;
+  background: #0a192f;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
 }
 
-.rdt_TableHeadRow div {
-  background: rgb(241, 241, 241);
+/* Table Header */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  margin-left: -15px;
 }
 
-.rdt_TableHeadRow .rdt_TableCol [role='columnheader'] div {
-  overflow: inherit !important;
-  white-space: inherit !important;
-  text-overflow: inherit !important;
+/* Search Box */
+.search-container {
+  display: flex;
+  align-items: center;
 }
 
-.m-input-icon {
+.search-box {
   position: relative;
-  padding-left: 5px;
-  margin-right: 10px;
 }
-.m-input-icon input {
-  padding-left: 40px;
+
+.search-input {
+  padding: 8px 35px 8px 12px;
+  font-size: 14px;
+  border: 1px solid #00e5ff;
+  border-radius: 5px;
+  background: #1a1a2e;
+  color: white;
+  /* width: 300px ; */
 }
-.m-input-icon-l {
+.search-input:focus, 
+.search-input:focus-visible {
+  border: 2px solid #00e5ff !important;
+  outline: none !important;
+}
+
+.search-icon {
   position: absolute;
-  top: 5px;
-  left: 10px;
-  color: #666;
-}
-.m-input-icon-l svg {
-  width: 25px;
-  height: 25px;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00e5ff;
+  padding-bottom: 5px;
 }
 
-.kTRUaX .m-input-icon .form-control {
-  width: 100% !important;
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 10px;
 }
 
-.w-search {
-  width: 320px !important;
+.btn-refresh, .btn-download {
+  padding: 8px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-refresh {
+  background: #00e5ff;
+  color: #0a192f;
+}
+
+.btn-download {
+  background: #ff477e;
+  color: white;
+}
+
+.btn-refresh:hover, .btn-download:hover {
+  transform: scale(1.05);
+}
+
+.rdt_Pagination button svg {
+  fill: #00e5ff !important; /* Change SVG color */
+}
+
+.rdt_Table {
+  overflow: visible !important;
+}
+
+.rdt_TableRow {
+  overflow: visible !important;
+  position: relative;
+}
+
+.dropdown-menu {
+  z-index: 1050 !important; /* Ensure it's above other elements */
+}
+
+.dropdown-item:hover {
+  background: #00e5ff !important;
+}
+
+.dropdown-toggle {
+  background: #00e5ff !important;
+  color: #000 !important;
+  border-color: white !important;
 }

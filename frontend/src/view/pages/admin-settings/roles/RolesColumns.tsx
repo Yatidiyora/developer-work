@@ -6,7 +6,7 @@ import { AiTwotoneDelete } from 'react-icons/ai';
 import { RiEditLine } from 'react-icons/ri';
 import { ACTION_TYPE, FORMAT } from '../../../../common/types/enum/CommonEnum';
 
-const userColumns = ({
+const RolesColumns = ({
     setAction
 }: {
     setAction: React.Dispatch<React.SetStateAction<{
@@ -47,30 +47,16 @@ const userColumns = ({
       ),
     },
     {
-      id: 'userName',
-      name: 'Username',
-      selector: (row: any) => row.userName,
+      id: 'name',
+      name: 'Name',
+      selector: (row: any) => row.name,
       wrap: true,
       sortable: true,
     },
     {
-      id: 'firstName',
-      name: 'First Name',
-      selector: (row: any) => row.firstName,
-      wrap: true,
-      sortable: true,
-    },
-    {
-      id: 'lastName',
-      name: 'Last Name',
-      selector: (row: any) => row.lastName,
-      wrap: true,
-      sortable: true,
-    },
-    {
-      id: 'email',
-      name: 'Email Address',
-      selector: (row: any) => row.email,
+      id: 'description',
+      name: 'Description',
+      selector: (row: any) => row.description,
       wrap: true,
       sortable: true,
     },
@@ -91,4 +77,4 @@ const userColumns = ({
   ];
 };
 
-export default userColumns;
+export default RolesColumns
