@@ -1,4 +1,4 @@
-import { Field, Formik } from "formik";
+import { ErrorMessage, Field, Formik } from "formik";
 import Modal from "react-bootstrap/Modal";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
@@ -19,7 +19,7 @@ import {
 import React from 'react';
 
 const UserModal = (props: any) => {
-    const { show, setShow, stateChange, modalTitle, initialValues } = props;
+    const { action, setAction, stateChange, modalTitle } = props;
 
     const {
       USER_NAME: {
@@ -28,14 +28,14 @@ const UserModal = (props: any) => {
         placeholder: usernamePlaceholder,
       },
       FIRST_NAME: {
-        fieldTitle: firstnameFieldTitle,
-        objectTitle: firstnameObjectTitle,
-        placeholder: firstnamePlaceholder,
+        fieldTitle: firstNameFieldTitle,
+        objectTitle: firstNameObjectTitle,
+        placeholder: firstNamePlaceholder,
       },
       LAST_NAME: {
-        fieldTitle: lastnameFieldTitle,
-        objectTitle: lastnameObjectTitle,
-        placeholder: lastnamePlaceholder,
+        fieldTitle: lastNameFieldTitle,
+        objectTitle: lastNameObjectTitle,
+        placeholder: lastNamePlaceholder,
       },
       EMAIL: {
         fieldTitle: emailFieldTitle,
@@ -45,11 +45,11 @@ const UserModal = (props: any) => {
     } = USER_MODAL_FIELDS;
   
     const handleClose = () => {
-      setShow(false);
+      setAction(undefined);
     };
   
     return (
-      <Modal show={show} size="lg" onHide={handleClose}>
+      <Modal show={action ? true : false} size="lg" onHide={handleClose}>
         <Modal.Header className="default-filter__header" closeButton>
           <Modal.Title style={{ fontSize: "16px", fontWeight: "bold" }}>
             {modalTitle}{" "}
@@ -58,7 +58,7 @@ const UserModal = (props: any) => {
         <Modal.Body>
           <div>
           <Formik
-        initialValues={initialValues}
+        initialValues={action.user}
         onSubmit={(values) => {
           console.log(values);
         }}
@@ -69,38 +69,51 @@ const UserModal = (props: any) => {
               <Col md={6}>
                 <Form.Group>
                   <Form.Label>{usernameFieldTitle}</Form.Label>
-                  <Form.Control name={usernameObjectTitle} onChange={handleChange} value={values[usernameObjectTitle]}/>
+                  <Form.Control name={usernameObjectTitle} placeholder={usernamePlaceholder} onChange={handleChange} value={values[usernameObjectTitle]}/>
+                  <ErrorMessage
+                        name={usernameObjectTitle}
+                        component="div"
+                        className="text-danger"
+                      />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group>
-                  <Form.Label>Custom Date</Form.Label>
-                  <Form.Control type="date" name="date" onChange={handleChange} value={values.date} />
+                  <Form.Label>{firstNameFieldTitle}</Form.Label>
+                  <Form.Control name={firstNameObjectTitle} placeholder={firstNamePlaceholder} onChange={handleChange} value={values[firstNameObjectTitle]} />
+                  <ErrorMessage
+                        name={usernameObjectTitle}
+                        component="div"
+                        className="text-danger"
+                      />
                 </Form.Group>
               </Col>
             </Row>
-  
-            <h5>Location</h5>
             <Row className="mb-3">
               <Col md={6}>
                 <Form.Group>
-                  <Form.Label>Global/Region</Form.Label>
-                  <Form.Select name="region" onChange={handleChange} value={values.region}>
-                    <option>Select</option>
-                  </Form.Select>
+                  <Form.Label>{lastNameFieldTitle}</Form.Label>
+                  <Form.Control name={lastNameObjectTitle} placeholder={lastNamePlaceholder} onChange={handleChange} value={values[lastNameObjectTitle]} />
+                  <ErrorMessage
+                        name={lastNameObjectTitle}
+                        component="div"
+                        className="text-danger"
+                      />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group>
-                  <Form.Label>Branch</Form.Label>
-                  <Form.Select name="branch" onChange={handleChange} value={values.branch}>
-                    <option>Select Branch</option>
-                  </Form.Select>
+                  <Form.Label>{emailFieldTitle}</Form.Label>
+                  <Form.Control name={emailObjectTitle} placeholder={emailPlaceholder} onChange={handleChange} value={values[emailObjectTitle]} />
+                  <ErrorMessage
+                        name={emailObjectTitle}
+                        component="div"
+                        className="text-danger"
+                      />
                 </Form.Group>
               </Col>
             </Row>
   
-            <h5>Account</h5>
             <Row className="mb-3">
               <Col md={4}>
                 <Form.Group>
@@ -114,54 +127,6 @@ const UserModal = (props: any) => {
                 <Form.Group>
                   <Form.Label>Account</Form.Label>
                   <Form.Select name="account" onChange={handleChange} value={values.account}>
-                    <option>Select</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Street Address</Form.Label>
-                  <Form.Select name="address" onChange={handleChange} value={values.address}>
-                    <option>Select</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
-  
-            <h5>Category</h5>
-            <Row className="mb-3">
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>TSDF/Group</Form.Label>
-                  <Form.Select name="tsdfGroup" onChange={handleChange} value={values.tsdfGroup}>
-                    <option>Select</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>TSDF/Facility</Form.Label>
-                  <Form.Select name="tsdfFacility" onChange={handleChange} value={values.tsdfFacility}>
-                    <option>Select</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Waste Type</Form.Label>
-                  <Form.Select name="wasteType" onChange={handleChange} value={values.wasteType}>
-                    <option>Select</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
-  
-            <h5>Individual</h5>
-            <Row className="mb-3">
-              <Col md={12}>
-                <Form.Group>
-                  <Form.Label>Team Member</Form.Label>
-                  <Form.Select name="teamMember" onChange={handleChange} value={values.teamMember}>
                     <option>Select</option>
                   </Form.Select>
                 </Form.Group>
