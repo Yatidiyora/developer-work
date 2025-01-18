@@ -67,5 +67,11 @@ const deleteDataInTableObject: DataConditions = {
 };
 
 export {
-  createDataObject, deleteDataInTableObject, fetchAllDataFromTableObject, fetchDataFromTableObject, fetchExistingDataFromTableObject, paginationSourceObject, updateDataInTableObject
+  createDataObject,
+  deleteDataInTableObject,
+  fetchAllDataFromTableObject,
+  fetchDataFromTableObject,
+  fetchExistingDataFromTableObject,
+  paginationSourceObject,
+  updateDataInTableObject,
 };

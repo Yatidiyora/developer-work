@@ -12,10 +12,17 @@ class CustomerCRMApi extends BaseApi {
     return CustomerCRMApi.instance;
   }
 
-  public async getCRMCustomers() {
+  public async getCRMCustomers(size: number, 
+    offset: number, 
+    keyword?: string | null, 
+    colName?: string, 
+    sort?: string) {
     try {
       const response = await this.get(
-        `/customers`,
+        `/customer?size=${size}&offset=${offset}` + 
+        `${keyword ? `&keyword=${keyword}`: ''}` +
+        `${colName ? `&sortColumnName=${colName}`: ''}` +
+        `${sort ? `&sortOrder=${sort}`: ''}`,
       );
       return response.data;
     } catch (error: AxiosError | any) {

@@ -59,11 +59,14 @@ export enum TABLES {
   PERMISSION_DETAILS = 'permission_details',
   ROLE_PERMISSION_DETAILS = 'role_permission_details',
   CONFIGURATION = 'configuration',
+  CUSTOMER_DETAILS = 'customer_details',
+  ORDER_DETAILS = 'order_details',
 }
 
 export enum MODULE {
   USER = 'Manage Users',
   ROLE = 'Manage Roles',
+  CUSTOMER = 'Manage Customers',
 }
 
 export enum ACTION {
@@ -119,6 +122,11 @@ export enum SORT {
   DESC = 'DESC',
 }
 
+export enum JOIN_TYPE {
+  INNER_JOIN = 'INNER_JOIN',
+  LEFT_JOIN = 'LEFT_JOIN'
+}
+
 export enum EVENT_SOURCE {
   AMAZON_CONNECT = 'Amazon Connect',
 }
@@ -147,6 +155,7 @@ export enum DB_MODELS {
   RoleDetailsModel = 'RoleDetailsModel',
   RolePermissionDetailsModel = 'RolePermissionDetailsModel',
   PermissionDetailsModel = 'PermissionDetailsModel',
+  CustomerDetailsModel = 'CustomerDetailsModel',
 }
 
 export enum DB_DATA_FUNCTIONS_TYPES {

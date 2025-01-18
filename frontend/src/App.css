@@ -486,14 +486,14 @@ html, body {
   height: 40px !important;
 }
 
-.user-management {
+.containt-management {
   padding: 20px;
   height: 100vh; /* Full viewport height */
   display: flex;
   flex-direction: column;
 }
 
-.user-management-header {
+.containt-management-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -503,7 +503,7 @@ html, body {
   box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
 }
 
-.user-management-header h2 {
+.containt-management-header h2 {
   margin: 0;
   font-size: 22px;
   font-weight: bold;
@@ -526,7 +526,7 @@ html, body {
 }
 
 /* Table Container */
-.user-table-container {
+.containt-table-container {
   margin-top: 20px;
   background: rgba(20, 20, 20, 0.8);
   padding: 20px;

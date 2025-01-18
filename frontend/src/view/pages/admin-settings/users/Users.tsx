@@ -19,15 +19,15 @@ const Users = () => {
     return await trackPromise(userInstance.getUsers(size, offset, keyword, colName, sort))
   }
   return (
-    <div className="user-management">
+    <div className="containt-management">
       {/* Page Header */}
-      <div className="user-management-header">
+      <div className="containt-management-header">
         <h2>Users Management</h2>
         <button className="add-user-btn">+ Add New</button>
       </div>
 
       {/* Table Container (Dynamic Content) */}
-      <div className="user-table-container">
+      <div className="containt-table-container">
         {/* Your dynamic table component will go here */}
         <DynamicDataTable
           columns={userColumn}

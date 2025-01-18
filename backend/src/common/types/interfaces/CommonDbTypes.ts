@@ -1,4 +1,4 @@
-import { DB_DATA_FUNCTIONS_TYPES, SEQUELIZE_CONDITION_TYPES } from '../enums/CommonEnums';
+import { DB_DATA_FUNCTIONS_TYPES, JOIN_TYPE, SEQUELIZE_CONDITION_TYPES } from '../enums/CommonEnums';
 import { FindAttributeOptions, GroupOption, Model, OrderItem, WhereOptions } from 'sequelize';
 
 export interface WhereField {
@@ -7,8 +7,21 @@ export interface WhereField {
   conditionValue: any; // You can replace 'any' with the specific type you expect, like 'string | null' if conditionValue can be a string or null.
 }
 
-export interface DataConditions {
+export interface JoinModel {
   modelName: string;
+  joinColumns: string[];
+  joinType: JOIN_TYPE;
+  joinModel: JoinModel[];
+}
+export interface JoinModelsType {
+  modelName: string;
+  joinColumns: string[];
+  joinModel: JoinModel[];
+}
+
+export interface DataConditions {
+  modelName?: string;
+  joinModels?: JoinModelsType;
   requiredWhereFields?: WhereField[];
   functionType?: DB_DATA_FUNCTIONS_TYPES;
   addObject?: Partial<any>;

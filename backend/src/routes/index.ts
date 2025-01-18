@@ -4,11 +4,13 @@ import jwtRoute from './jwtRoutes';
 import roleRoute from './roleRoutes';
 import samlRoutes from './samlAuthenticate';
 import userRoute from './userRoutes';
+import customerRoute from './customerRoutes';
 
 const route = Router();
 
 route.use('/role', jwtStrategy().authenticate(), roleRoute);
 route.use('/user', jwtStrategy().authenticate(), userRoute);
+route.use('/customer', jwtStrategy().authenticate(), customerRoute);
 route.use('/token', jwtRoute);
 
 route.use('/', samlRoutes);

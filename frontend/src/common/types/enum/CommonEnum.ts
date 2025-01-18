@@ -8,6 +8,7 @@ export enum ACTION_TYPE {
   EDIT = 'EDIT',
   ADD = 'ADD',
   DELETE = 'DELETE',
+  REVIEW = 'REVIEW',
 }
 
 export enum FORMAT {

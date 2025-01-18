@@ -6,6 +6,8 @@ import { initRoleDetailsModel, RoleDetailsModel } from './RoleDetailsModel';
 import { initRolePermissionDetailsModel, RolePermissionDetailsModel } from './RolePermissionDetailsModel';
 import { initUserDetailsModel, UserDetailsModel } from './UserDetailsModel';
 import { initUserRoleMappingModel, UserRoleMappingModel } from './UserRoleMappingModel';
+import { initCustomerDetailsModel, CustomerDetailsModel } from './CustomerDetailsModel';
+import { initOrdersDetailsModel, OrdersDetailsModel } from './OrdersDetailsModel';
 
 let sequelize: Sequelize;
 const initPgDB = () => {
@@ -35,8 +37,19 @@ const initPgDB = () => {
   initRoleDetailsModel(sequelize);
   initPermissionDetailsModel(sequelize);
   initUserRoleMappingModel(sequelize);
+  initCustomerDetailsModel(sequelize);
+  initOrdersDetailsModel(sequelize);
 };
 
 export {
-  ConfigurationDetailsModel, initPgDB as initAuroraDB, PermissionDetailsModel, RoleDetailsModel, RolePermissionDetailsModel, sequelize, UserDetailsModel, UserRoleMappingModel
+  ConfigurationDetailsModel,
+  initPgDB as initAuroraDB,
+  PermissionDetailsModel,
+  RoleDetailsModel,
+  RolePermissionDetailsModel,
+  sequelize,
+  UserDetailsModel,
+  UserRoleMappingModel,
+  CustomerDetailsModel,
+  OrdersDetailsModel,
 };

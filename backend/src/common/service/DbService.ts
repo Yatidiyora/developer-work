@@ -35,6 +35,7 @@ export const commonDbExecution = async (source: DataConditions) => {
   try {
     const {
       modelName,
+      joinModels,
       requiredWhereFields,
       paginationData,
       functionType,
@@ -48,7 +49,8 @@ export const commonDbExecution = async (source: DataConditions) => {
     } = source;
     const whereCondition = requiredWhereFields ? createWhereCondition(requiredWhereFields) : null;
     const querySource: DataConditions = {
-      modelName,
+      ...(modelName && { modelName }),
+      ...(joinModels && { joinModels }),
       ...(whereCondition && { whereCondition }),
       ...(paginationData && { paginationData }),
       ...(addObject && { addObject }),

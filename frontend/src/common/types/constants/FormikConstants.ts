@@ -3,3 +3,10 @@ export const MARGIN_DEFAULT_FILTER_FIELDS = {
     CUSTOM_DATE: { fieldTitle: 'Custom Date', objectTitle: 'customDate', placeholder: 'Select Custom Date', fieldType: 'date', dateFormat: 'yyyy-MM-dd' },
     REGION: { fieldTitle: 'Global/Region', objectTitle: 'globalRegion', placeholder: 'Select Global Region', fieldType: 'date' },
 }
+
+export const USER_MODAL_FIELDS = {
+    USER_NAME: { fieldTitle: 'User Name', objectTitle: 'userName', placeholder: 'Enter username' },
+    FIRST_NAME: { fieldTitle: 'First Name', objectTitle: 'firstName', placeholder: 'Enter firstname' },
+    LAST_NAME: { fieldTitle: 'Last Name', objectTitle: 'lastName', placeholder: 'Enter lastname' },
+    EMAIL: { fieldTitle: 'Email', objectTitle: 'email', placeholder: 'Enter email' },
+}
