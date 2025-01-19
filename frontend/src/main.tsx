@@ -7,10 +7,13 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import "react-datepicker/dist/react-datepicker.css";
 import Loading from './view/common/common-components/Loading.tsx';
+import React from 'react';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
+  <>
     <Loading />
     <App />
-  </StrictMode>,
+  </>
+  // </StrictMode>,
 )

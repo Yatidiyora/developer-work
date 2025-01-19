@@ -645,3 +645,35 @@ html, body {
   color: #000 !important;
   border-color: white !important;
 }
+
+.modal-content {
+  background: #F8F9FA !important;
+}
+
+.modal-header {
+  background: #E3F2FD !important;
+}
+
+.input-field {
+  background: #F1F3F4 !important;
+}
+
+.rdt_TableHeader{
+  /* font-weight: bold !important; */
+  color: #333333 !important;
+}
+
+.rdt_TableHeader div{
+  font-weight: 500 !important;
+}
+
+.action-button {
+  width: 90px; 
+  background: #17A2B8 !important;
+  border: #17A2B8 !important;
+  color: #FFFFFF;
+}
+
+.action-button:hover {
+  background: #138496 !important;
+}

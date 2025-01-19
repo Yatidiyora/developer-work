@@ -135,3 +135,32 @@ export const marginDefaultSelectCss: StylesConfig = {
       transition: "background-color 0.3s ease",
     }),
   };
+
+  export const userRolesCustomStyles = {
+    table: {
+      style: {
+        minHeight: '260px',
+      },
+    },
+    rows: {
+      style: {
+        minHeight: '50px', // override the row height
+        background: '#F8F9FA',
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+        background: '#f1f1f1',
+        fontSize: '16px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+        fontSize: '16px',
+      },
+    },
+  };

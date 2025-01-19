@@ -10,7 +10,7 @@ const RolesColumns = ({
     setAction
 }: {
     setAction: React.Dispatch<React.SetStateAction<{
-      user: any;
+      role: any;
       actionType: any;
   } | undefined>> 
 }) => {
@@ -26,7 +26,7 @@ const RolesColumns = ({
         <DropdownButton id="dropdown-item-button" title="Action">
             <Dropdown.Item
             onClick={() => {
-              setAction({user: row, actionType: ACTION_TYPE.EDIT})
+              setAction({role: row, actionType: ACTION_TYPE.EDIT})
             }}
               as="button"
             >

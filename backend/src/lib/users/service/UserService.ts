@@ -114,7 +114,7 @@ export const fetchUserByUserId = async (req: Request, res: Response) => {
     const rolesSource: DataConditions = fetchDataFromTableObject;
     rolesSource.modelName = DB_MODELS.UserRoleMappingModel;
     rolesSource.requiredWhereFields[0].conditionValue = { userId: id };
-    const { dataObjects: roles } = (await commonDbExecution(userSource)) as GetAllDataResponse;
+    const { dataObjects: roles } = (await commonDbExecution(rolesSource)) as GetAllDataResponse;
     if (!fetchedUserByPrimaryKey) {
       res.status(STATUS_CODE.NOT_FOUND).json({ message: STATUS_MESSAGE.USER_NOT_FOUND, status: STATUS_MESSAGE.ERROR });
     }
@@ -231,6 +231,7 @@ export const updateUserToDb = async (req: Request, res: Response) => {
     };
     updateDataInTableObject.modelName = DB_MODELS.UserDetailsModel;
     updateDataInTableObject.requiredWhereFields[0].conditionValue = { id };
+    updateDataInTableObject.updateObject = userObject;
     //Update the user
     await commonDbExecution(updateDataInTableObject);
 
@@ -248,7 +249,8 @@ export const updateUserToDb = async (req: Request, res: Response) => {
       const rolesToDelete = roleIds.filter((role) => !roles.includes(role));
 
       //Add and delete all the userRoleMapping if needed
-      deleteDataInTableObject.modelName = DB_MODELS.UserRoleMappingModel;
+      if (rolesToDelete.length) {
+        deleteDataInTableObject.modelName = DB_MODELS.UserRoleMappingModel;
       deleteDataInTableObject.requiredWhereFields[0].conditionValue = {
         userId: id,
         roleId: {
@@ -256,6 +258,7 @@ export const updateUserToDb = async (req: Request, res: Response) => {
         },
       };
       await commonDbExecution(deleteDataInTableObject);
+      }
       const newRoles = rolesToAdd.map((role: string) => {
         return { id: uuidv4(), userId: id, roleId: role };
       });

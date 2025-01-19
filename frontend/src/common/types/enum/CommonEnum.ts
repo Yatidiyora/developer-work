@@ -36,3 +36,9 @@ export enum FORMAT {
   JSON = 'YYYYMMDDHHmmss',
   S3_FOLDER_STRUCTURE = 'YYYY/MM',
 }
+
+export enum TOGGER_PERMISSION_TYPE {
+  VIEW = 'VIEW',
+  EDIT = 'EDIT',
+  DELETE = 'DELETE'
+}
