@@ -15,7 +15,6 @@ export const validatePermission = (module: string | string[], action: string) =>
     rolesSource.requiredWhereFields[0].conditionValue = {
       userId: id,
     };
-    rolesSource.logging = true;
     const { dataObjects } = (await commonDbExecution(rolesSource)) as GetAllDataResponse;
     const roles = dataObjects as UserRoleMappingModel[];
     const roleIds = roles.map((role) => role.roleId);
