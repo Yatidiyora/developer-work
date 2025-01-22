@@ -194,6 +194,7 @@ export const addUserAndUserroleToDb = async (req: Request, res: Response) => {
     }
     logger.error('Error while creating user ', error);
     res.status(STATUS_CODE.SERVER_ERROR).json({ message: STATUS_MESSAGE.USER_NOT_ADDED, status: STATUS_MESSAGE.ERROR });
+    return;
   }
 };
 
@@ -216,12 +217,13 @@ export const deleteUserFromDb = async (req: Request, res: Response) => {
     res
       .status(STATUS_CODE.SERVER_ERROR)
       .json({ message: STATUS_MESSAGE.USER_NOT_DELETED, status: STATUS_MESSAGE.ERROR });
+    return;
   }
 };
 
 export const updateUserToDb = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { userName, firstName, lastName, email, roles } = req.body;
+  const { userName, firstName, lastName, email, roleIds } = req.body;
   try {
     const userObject = {
       userName: userName,
@@ -235,7 +237,7 @@ export const updateUserToDb = async (req: Request, res: Response) => {
     //Update the user
     await commonDbExecution(updateDataInTableObject);
 
-    if (roles) {
+    if (roleIds) {
       //Fetching all the assigned roles and get the roleIds
       const rolesSource: DataConditions = fetchDataFromTableObject;
       rolesSource.modelName = DB_MODELS.UserRoleMappingModel;
@@ -245,8 +247,8 @@ export const updateUserToDb = async (req: Request, res: Response) => {
       const roleIds = (rolesAndUsers as UserRoleMappingModel[]).map(({ roleId }) => roleId);
 
       //Get all the added and deleted roles if any
-      const rolesToAdd = roles.filter((role: string) => !roleIds.includes(role));
-      const rolesToDelete = roleIds.filter((role) => !roles.includes(role));
+      const rolesToAdd = roleIds.filter((role: string) => !roleIds.includes(role));
+      const rolesToDelete = roleIds.filter((role) => !roleIds.includes(role));
 
       //Add and delete all the userRoleMapping if needed
       if (rolesToDelete.length) {

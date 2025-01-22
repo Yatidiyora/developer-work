@@ -194,7 +194,7 @@ const UserModal = (props: UserModalProps) => {
                 firstName: values.firstName,
                 lastName: values.lastName,
                 email: values.email,
-                roles: roles.assignedRoles.map(({ id }) => id),
+                roleIds: roles.assignedRoles.map(({ id }) => id),
               };
               if (action.actionType === ACTION_TYPE.ADD) {
                 const addUser = async () => {
