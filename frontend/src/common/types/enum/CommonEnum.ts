@@ -42,3 +42,13 @@ export enum TOGGER_PERMISSION_TYPE {
   EDIT = 'EDIT',
   DELETE = 'DELETE'
 }
+
+export enum RoutesPath {
+  LOGIN = '/login',
+  HOME = '/',
+  CUSTOMER_ORDER_REVIEW = '/customer-crm/order-review'
+}
+
+export enum PERMISSION_TYPES {
+  CUSTOMER_ORDER_REVIEW = 'customerOrderReview'
+}

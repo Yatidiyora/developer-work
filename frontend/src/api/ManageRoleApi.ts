@@ -69,6 +69,15 @@ class ManageRoleApi extends BaseApi {
       ToastService({ type: ToastType.ERROR, message: error.response.data.message });
     }
   }
+
+  public async deleteRoleById(id: string): Promise<any> {
+    try {
+      const response = await this.delete<SuccessResponse>(`role/${id}`);
+      ToastService({ type: ToastType.SUCCESS, message: response.data.message });
+    } catch (error: AxiosError | any) {
+      ToastService({ type: ToastType.ERROR, message: error.response.data });
+    }
+  }
 }
 
 export default ManageRoleApi;

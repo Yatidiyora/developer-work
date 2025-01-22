@@ -32,7 +32,7 @@ export const fetchAllCustomers = async (req: Request, res: Response) => {
     const paginationSource: DataConditions = paginationSourceObject;
     paginationSource.modelName = DB_MODELS.CustomerDetailsModel;
     paginationSource.requiredWhereFields[0].conditionValue = {
-      [Op.or]: ['name', 'email'].map((field) => ({
+      [Op.or]: ['customerName', 'email'].map((field) => ({
         [field]: { [Op.like]: `%${keyword ?? ''}%` },
       })),
     };

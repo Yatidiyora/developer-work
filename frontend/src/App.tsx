@@ -7,6 +7,7 @@ import RequireAuth from "./view/common/authantications/RequireAuth";
 import Header from "./view/layouts/header/Header";
 import Sidebar from "./view/layouts/sidebar/Sidebar";
 import Login from "./view/pages/login-pages/Login";
+import Dashboard from "./view/pages/Dashboard";
 const NotFound = () => <h1>Page Not Found</h1>;
 
 const App = () => {
@@ -78,6 +79,7 @@ const App = () => {
                 />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <Dashboard />
             </main>
           </div>
         </div>

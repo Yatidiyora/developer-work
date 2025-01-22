@@ -8,7 +8,12 @@ export interface Role {
   createdAt?: string;
   updatedAt?: string;
 }
-
+export interface RoleActionState {
+  role: Role;
+  actionType: ACTION_TYPE;
+  roleDelete: boolean;
+  roleDeleteId: string;
+}
 export interface GetRolesResponse {
   result: Role[];
   total: number;
@@ -41,16 +46,10 @@ export interface TogglerType {
 }
 
 export interface RoleModalProps {
-  action: {
-    role: Role;
-    actionType: ACTION_TYPE;
-  };
+  action: RoleActionState;
   setAction: React.Dispatch<
     React.SetStateAction<
-      | {
-          role: Role;
-          actionType: ACTION_TYPE;
-        }
+      | RoleActionState
       | undefined
     >
   >;

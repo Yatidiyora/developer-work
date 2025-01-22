@@ -5,16 +5,14 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { RiEditLine } from 'react-icons/ri';
 import { ACTION_TYPE, FORMAT } from '../../../../common/types/enum/CommonEnum';
+import { Role, RoleActionState } from '../../../../common/types/interface/RoleModal.interface';
 
 const RolesColumns = ({
     setAction
 }: {
-    setAction: React.Dispatch<React.SetStateAction<{
-      role: any;
-      actionType: any;
-  } | undefined>> 
+    setAction: React.Dispatch<React.SetStateAction<RoleActionState | undefined>> 
 }) => {
-  const formatDate = (date: Date): string => {
+  const formatDate = (date?: string): string => {
     const format = date ? moment(date).utc().format(FORMAT.NORAML_DATE) : 'N/A';
     return format;
   };
@@ -22,11 +20,11 @@ const RolesColumns = ({
   return [
     {
       name: 'Actions',
-      cell: (row: any) => (
+      cell: (row: Role) => (
         <DropdownButton id="dropdown-item-button" title="Action">
             <Dropdown.Item
             onClick={() => {
-              setAction({role: row, actionType: ACTION_TYPE.EDIT})
+              setAction({role: row, actionType: ACTION_TYPE.EDIT, roleDelete: false, roleDeleteId: ""})
             }}
               as="button"
             >
@@ -36,6 +34,9 @@ const RolesColumns = ({
               Edit
             </Dropdown.Item>
             <Dropdown.Item
+            onClick={() => {
+              setAction({role: row, actionType: ACTION_TYPE.DELETE, roleDelete: true, roleDeleteId: row.id})
+            }}
               as="button"
             >
               <i className="dropdown-icon">
@@ -49,28 +50,28 @@ const RolesColumns = ({
     {
       id: 'name',
       name: 'Name',
-      selector: (row: any) => row.name,
+      selector: (row: Role) => row.name,
       wrap: true,
       sortable: true,
     },
     {
       id: 'description',
       name: 'Description',
-      selector: (row: any) => row.description,
+      selector: (row: Role) => row.description,
       wrap: true,
       sortable: true,
     },
     {
       id: 'createdAt',
       name: 'Created At',
-      selector: (row: any) => formatDate(row.createdAt),
+      selector: (row: Role) => formatDate(row.createdAt),
       wrap: true,
       sortable: true,
     },
     {
       id: 'updatedAt',
       name: 'Updated At',
-      selector: (row: any) => formatDate(row.updatedAt),
+      selector: (row: Role) => formatDate(row.updatedAt),
       wrap: true,
       sortable: true,
     },

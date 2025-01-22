@@ -3,6 +3,8 @@ import { TABLES } from '../../types/enums/CommonEnums';
 
 export class CustomerDetailsModel extends Model {
   public id: string;
+  public customerName: string;
+  public userName: string;
   public email: string;
   public createdAt: Date;
   public updatedAt: Date;
@@ -16,7 +18,10 @@ export const initCustomerDetailsModel = (sequelize: Sequelize) => {
         allowNull: false,
         primaryKey: true,
       },
-      name: {
+      customerName: {
+        type: DataTypes.STRING,
+      },
+      userName: {
         type: DataTypes.STRING,
       },
       email: {
