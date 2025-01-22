@@ -204,17 +204,18 @@ export const updateRoleToDb = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name, permissions } = req.body;
   try {
-    const rolePermissionId = uuidv4();
     const roleSource: DataConditions = updateDataInTableObject;
+    roleSource.modelName = DB_MODELS.RoleDetailsModel;
     roleSource.requiredWhereFields[0].conditionValue = { id };
+    roleSource.updateObject = {name};
     await commonDbExecution(roleSource);
     const updatedRolePermissions = (permissions as RolePermission[]).map(
-      ({ permissionId, permissionName, view, edit, delete: isDelete }) => ({
-        roleId: rolePermissionId,
-        permissionId: permissionId,
-        permissionName: permissionName,
-        view: view,
-        edit: edit,
+      ({ permissionId, roleId, permissionName, view, edit, delete: isDelete }) => ({
+        roleId,
+        permissionId,
+        permissionName,
+        view,
+        edit,
         delete: isDelete,
       }),
     );

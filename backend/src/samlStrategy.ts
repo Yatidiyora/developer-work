@@ -16,7 +16,6 @@ const {
   SAML: { CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET },
   FRONTEND: { AUTH_REDIRECT_URL },
 } = getConfig();
-console.log(CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
 
 export const samlStrategy = new GoogleStrategy(
   {

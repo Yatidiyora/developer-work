@@ -12,5 +12,5 @@ export const USER_MODAL_FIELDS = {
 }
 
 export const ROLE_MODAL_FIELDS = {
-    ROLE_NAME: { fieldTitle: 'Role Name', objectTitle: 'roleName', placeholder: 'Enter rolename' },
+    ROLE_NAME: { fieldTitle: 'Role Name', objectTitle: 'name', placeholder: 'Enter rolename' },
 }

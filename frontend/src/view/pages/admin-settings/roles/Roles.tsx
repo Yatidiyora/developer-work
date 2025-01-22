@@ -6,6 +6,7 @@ import { useToogle } from "../../../../hooks/useToogle";
 import RoleModal from "../../../common/modals/RoleModal";
 import { DynamicDataTable } from "../../../data-table/DynamicDataTable";
 import RolesColumns from "./RolesColumns";
+import { initialRole } from "../../../../common/types/constants/CommonConstants";
 
 const Roles = () => {
   const [action, setAction] = useState<{
@@ -28,12 +29,15 @@ const Roles = () => {
       roleInstance.getRoles(size, offset, keyword, colName, sort)
     );
   };
+  const addRoleModel = () => {
+      setAction({ role: initialRole, actionType: ACTION_TYPE.ADD });
+    };
   return (
     <div className="containt-management">
     {/* Page Header */}
     <div className="containt-management-header">
         <h2>Roles Management</h2>
-        <button className="add-user-btn">+ Add New</button>
+        <button onClick={addRoleModel} className="add-user-btn">+ Add New</button>
       </div>
       <div>
         {(action?.actionType === ACTION_TYPE.EDIT ||
@@ -43,7 +47,7 @@ const Roles = () => {
             setAction={setAction}
             stateChange={toogleStatus}
             modalTitle={
-              action.actionType === ACTION_TYPE.EDIT ? "Edit Role" : "Add Role"
+              action.actionType === ACTION_TYPE.EDIT ? "Edit Role" : "Add New Role"
             }
           />
         )}

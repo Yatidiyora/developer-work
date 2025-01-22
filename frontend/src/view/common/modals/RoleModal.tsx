@@ -200,7 +200,7 @@ const RoleModal = (props: RoleModalProps) => {
           availablePermissions = {
             ...availablePermissions,
             [perm.id]: {
-              name: perm.permissionName,
+              name: perm.name,
               view: false,
               edit: false,
               delete: false,
@@ -233,9 +233,9 @@ const RoleModal = (props: RoleModalProps) => {
                 roleId: action.role.id,
                 permissionName: value.name,
                 permissionId: key,
-                view: value.view || false,
-                edit: value.edit || false,
-                delete: value.delete || false,
+                view: Number(value.view || false),
+                edit: Number(value.edit || false),
+                delete: Number(value.delete || false),
               }});
               const role = {
                 name: values[rolenameObjectTitle],
