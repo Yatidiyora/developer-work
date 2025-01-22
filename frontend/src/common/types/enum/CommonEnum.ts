@@ -46,7 +46,7 @@ export enum TOGGER_PERMISSION_TYPE {
 export enum RoutesPath {
   LOGIN = '/login',
   HOME = '/',
-  CUSTOMER_ORDER_REVIEW = '/customer-crm/order-review'
+  CUSTOMER_ORDER_REVIEW = '/customer-crm/order-review/:id'
 }
 
 export enum PERMISSION_TYPES {

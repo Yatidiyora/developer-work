@@ -509,6 +509,17 @@ html, body {
   font-weight: bold;
 }
 
+.details-container {
+  background: rgba(16, 42, 68, 0.8);
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+.row-title {
+
+}
+
 .add-user-btn {
   background: #00e5ff;
   color: #000;
@@ -695,4 +706,42 @@ html, body {
 .toggle-icon-lg svg path,
 .toggle-icon svg path {
   fill: #00e5ff;
+}
+
+.row-title {
+  background-color: #1E293B; /* Slightly lighter dark blue for contrast */
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px 0 0 5px; /* Rounded corners for titles */
+  text-align: center;
+}
+
+.row-value {
+  background-color: #0D6EFD; /* Highlighted blue for values */
+  padding: 10px;
+  border-radius: 0 5px 5px 0; /* Rounded corners for values */
+  text-align: center;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* Row styling */
+.row {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+/* Hover effects */
+.row-title:hover, .row-value:hover {
+  filter: brightness(1.2); /* Slight brightness on hover */
+  transition: 0.3s ease-in-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .row-title, .row-value {
+      font-size: 0.9rem; /* Adjust font size for smaller screens */
+      padding: 8px;
+  }
 }

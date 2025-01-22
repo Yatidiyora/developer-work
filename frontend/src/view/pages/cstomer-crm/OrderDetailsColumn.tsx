@@ -5,27 +5,19 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { RiEditLine } from 'react-icons/ri';
 import { ACTION_TYPE, FORMAT, RoutesPath } from '../../../common/types/enum/CommonEnum';
-import { useNavigate } from 'react-router-dom';
 
-const CustomerCRMColumns = ({
+const OrderDetailsColumn = ({
     setAction
 }: {
     setAction: React.Dispatch<React.SetStateAction<{
-      customer: any;
+    customerOrder: any;
       actionType: any;
   } | undefined>> 
 }) => {
-  const navigate = useNavigate();
   const formatDate = (date: Date): string => {
     const format = date ? moment(date).utc().format(FORMAT.NORAML_DATE) : 'N/A';
     return format;
   };
-
-  const onReview = (id: string) =>{
-    console.log(id);
-    
-    navigate(RoutesPath.CUSTOMER_ORDER_REVIEW.replace(':id', id));
-  }
 
   return [
     {
@@ -34,8 +26,8 @@ const CustomerCRMColumns = ({
         <DropdownButton id="dropdown-item-button" title="Action">
             <Dropdown.Item
             onClick={() => {
-              onReview(row.id)
-            }}
+                          setAction({ customerOrder: row, actionType: ACTION_TYPE.EDIT });
+                        }}
               as="button"
             >
               <i className="dropdown-icon">
@@ -84,4 +76,4 @@ const CustomerCRMColumns = ({
   ];
 };
 
-export default CustomerCRMColumns;
+export default OrderDetailsColumn;
