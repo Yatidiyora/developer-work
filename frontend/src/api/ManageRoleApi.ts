@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { BaseApi } from './BaseApi';
 import { ToastService, ToastType } from '../view/common/modals/TostModal';
 import { GetRolesResponse, RoleById } from '../common/types/interface/RoleModal.interface';
+import { SuccessResponse } from '../common/types/interface/Common.interface';
 
 class ManageRoleApi extends BaseApi {
   private static instance: ManageRoleApi;
@@ -39,8 +40,33 @@ class ManageRoleApi extends BaseApi {
       const response = await this.get<RoleById>(`/role/${id}`);
       return response.data;
     } catch (error: AxiosError | any) {
-      ToastService({ type: ToastType.ERROR, message: error.response.data });
+      ToastService({ type: ToastType.ERROR, message: error.response.data.message });
       return error.response.data;
+    }
+  }
+
+  public async addNewRole(payload: string) {
+    try {
+      const response = await this.post<SuccessResponse>('/role', JSON.parse(payload));
+
+      ToastService({
+        type: ToastType.SUCCESS,
+        message: response.data.message,
+      });
+    } catch (error: AxiosError | any) {
+      ToastService({ type: ToastType.ERROR, message: error.response.data.message });
+    }
+  }
+
+  public async updateRole(id: string, payload: string): Promise<any> {
+    try {
+      const response = await this.post<SuccessResponse>(`/role/${id}`, JSON.parse(payload));
+      ToastService({
+        type: ToastType.SUCCESS,
+        message: response.data.message,
+      });
+    } catch (error: AxiosError | any) {
+      ToastService({ type: ToastType.ERROR, message: error.response.data.message });
     }
   }
 }

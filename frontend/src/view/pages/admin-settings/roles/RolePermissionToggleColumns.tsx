@@ -24,13 +24,13 @@ const RolePermissionToggleColumns = ({setToggler}: {setToggler: React.Dispatch<R
     return [
         {
           name: 'Name',
-          selector: (row: RolePermissions) => row.name,
+          selector: (row: any) => row.name,
           wrap: true,
           sortable: true,
         },
         {
           name: 'View',
-          cell: (row: RolePermissions) =>
+          cell: (row: any) =>
             row.view ? (
               <i
                 className="toggle-icon"
@@ -58,10 +58,11 @@ const RolePermissionToggleColumns = ({setToggler}: {setToggler: React.Dispatch<R
             ),
           wrap: true,
           sortable: false,
+          width: "60px"
         },
         {
           name: 'Edit',
-          cell: (row: RolePermissions) =>
+          cell: (row: any) =>
             row.edit ? (
               <i
                 className="toggle-icon"
@@ -89,10 +90,11 @@ const RolePermissionToggleColumns = ({setToggler}: {setToggler: React.Dispatch<R
             ),
           wrap: true,
           sortable: false,
+          width: "60px"
         },
         {
           name: 'Delete',
-          cell: (row: RolePermissions) =>
+          cell: (row: any) =>
             row.delete ? (
               <i
                 className="toggle-icon"
@@ -120,6 +122,7 @@ const RolePermissionToggleColumns = ({setToggler}: {setToggler: React.Dispatch<R
             ),
           wrap: true,
           sortable: false,
+          minWidth: "60px"
         },
       ]
 };

@@ -40,7 +40,7 @@ const RoleModal = (props: RoleModalProps) => {
   const handleLeftChange = ({
     selectedRows,
   }: {
-    selectedRows: RolePermissions[];
+    selectedRows: any[];
   }) => {
     setSelectedRoles(selectedRows);
   };
@@ -48,7 +48,7 @@ const RoleModal = (props: RoleModalProps) => {
   const handleRightChange = ({
     selectedRows,
   }: {
-    selectedRows: RolePermissions[];
+    selectedRows: any[];
   }) => {
     setSelectedRoles(selectedRows);
   };
@@ -61,16 +61,15 @@ const RoleModal = (props: RoleModalProps) => {
     let assignedPermissions = { ...toggler.assignedPermissions };
     if (changeDirectionRight) {
       changePermissions
-        .filter(({ permissionId }) => permissionId)
-        .map(({ permissionId }) => permissionId)
+        .map(({ id }) => id)
         .forEach((key) => {
           delete availablePermissions[key]; // Delete the key from the copied object
         });
       changePermissions.map((perm) => {
         assignedPermissions = {
           ...assignedPermissions,
-          [perm.permissionId]: {
-            name: perm.permissionName,
+          [perm.id]: {
+            name: perm.name,
             view: perm.view,
             edit: perm.edit,
             delete: perm.delete,
@@ -81,8 +80,8 @@ const RoleModal = (props: RoleModalProps) => {
       changePermissions.map((perm) => {
         availablePermissions = {
           ...availablePermissions,
-          [perm.permissionId]: {
-            name: perm.permissionName,
+          [perm.id]: {
+            name: perm.name,
             view: perm.view,
             edit: perm.edit,
             delete: perm.delete,
@@ -90,8 +89,7 @@ const RoleModal = (props: RoleModalProps) => {
         };
       });
       changePermissions
-        .filter(({ permissionId }) => permissionId)
-        .map(({ permissionId }) => permissionId)
+        .map(({ id }) => id)
         .forEach((key) => {
           delete assignedPermissions[key]; // Delete the key from the copied object
         });
@@ -126,7 +124,7 @@ const RoleModal = (props: RoleModalProps) => {
   const availableColumn = [
     {
       name: "Name",
-      selector: (row: RolePermissions) => row.name,
+      selector: (row: any) => row.name,
       wrap: true,
       sortable: false,
     },
@@ -167,7 +165,7 @@ const RoleModal = (props: RoleModalProps) => {
           availablePermissions = {
             ...availablePermissions,
             [perm.id]: {
-              name: perm.permissionName,
+              name: perm.name,
               view: false,
               edit: false,
               delete: false,
@@ -179,7 +177,7 @@ const RoleModal = (props: RoleModalProps) => {
       rolePermissions.forEach((perm) => {
         assignedPermissions = {
           ...assignedPermissions,
-          [perm.id]: {
+          [perm.permissionId]: {
             name: perm.permissionName,
             view: perm.view,
             edit: perm.edit,
@@ -201,7 +199,7 @@ const RoleModal = (props: RoleModalProps) => {
         defaultRolePerm.result.forEach((perm) => {
           availablePermissions = {
             ...availablePermissions,
-            [perm.permissionId]: {
+            [perm.id]: {
               name: perm.permissionName,
               view: false,
               edit: false,
@@ -218,20 +216,8 @@ const RoleModal = (props: RoleModalProps) => {
     getDetails();
   }, []);
 
-  useEffect(() => {
-    console.log(
-      "assignedFilteredItems: ",
-      Object.entries(toggler.assignedPermissions).map(([key, value]) => {
-        return {
-          ...value,
-        };
-      })
-    );
-    console.log(toggler);
-  }, [toggler]);
-
   return (
-    <Modal show={action ? true : false} size="lg" onHide={handleClose}>
+    <Modal className="role-modal" show={action ? true : false} size="lg" onHide={handleClose}>
       <Modal.Header className="default-filter__header" closeButton>
         <Modal.Title style={{ fontSize: "16px", fontWeight: "bold" }}>
           {modalTitle}{" "}
@@ -243,20 +229,31 @@ const RoleModal = (props: RoleModalProps) => {
             initialValues={action.role}
             onSubmit={(values) => {
               console.log(values);
-              const role = {};
+              const permissions = Object.entries(toggler.assignedPermissions).map(([key, value]) => {return {
+                roleId: action.role.id,
+                permissionName: value.name,
+                permissionId: key,
+                view: value.view || false,
+                edit: value.edit || false,
+                delete: value.delete || false,
+              }});
+              const role = {
+                name: values[rolenameObjectTitle],
+                permissions,
+              };
               if (action.actionType === ACTION_TYPE.ADD) {
-                const addUser = async () => {
+                const addRole = async () => {
                   await trackPromise(
-                    userInstance.addNewUser(JSON.stringify(role))
+                    userRolesInstance.addNewRole(JSON.stringify(role))
                   );
                   stateChange();
                   setAction(undefined);
                 };
-                addUser();
+                addRole();
               } else {
                 const updateUser = async () => {
                   await trackPromise(
-                    userInstance.updateUser(
+                    userRolesInstance.updateRole(
                       action.role.id,
                       JSON.stringify(role)
                     )
@@ -293,18 +290,23 @@ const RoleModal = (props: RoleModalProps) => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Col md={5}>
+                  <Col lg={5}>
                     <Form.Group>
                       <div className="search-filter">
                         <DataTable
                           title="Available Permissions"
                           columns={availableColumn}
-                          data={[]}
-                          // selectableRows
-                          // onSelectedRowsChange={handleLeftChange}
-                          // clearSelectedRows={cleasrSelected}
+                          data={Object.entries(toggler.availablePermissions).map(([key, value]) => {
+                            return {
+                              id: key,
+                              ...value,
+                            };
+                          })}
+                          selectableRows
+                          onSelectedRowsChange={handleLeftChange}
+                          clearSelectedRows={cleasrSelected}
                           // persistTableHead
-                          // customStyles={userRolesCustomStyles}
+                          customStyles={userRolesCustomStyles}
                         />
                       </div>
                     </Form.Group>
@@ -339,16 +341,21 @@ const RoleModal = (props: RoleModalProps) => {
                       </div>
                     </Form.Group>
                   </Col>
-                  <Col md={5}>
+                  <Col md={6}>
                     <Form.Group>
                       <div className="search-filter">
                         <DataTable
                           title="Assigned Permissions"
                           columns={assignedColumns}
-                          data={[]}
+                          data={Object.entries(toggler.assignedPermissions).map(([key, value]) => {
+                            return {
+                              id: key,
+                              ...value,
+                            };
+                          })}
                           selectableRows
-                          // onSelectedRowsChange={handleRightChange}
-                          // clearSelectedRows={cleasrSelected}
+                          onSelectedRowsChange={handleRightChange}
+                          clearSelectedRows={cleasrSelected}
                           // persistTableHead
                           customStyles={userRolesCustomStyles}
                         />

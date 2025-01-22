@@ -677,3 +677,22 @@ html, body {
 .action-button:hover {
   background: #138496 !important;
 }
+
+/* .role-modal .modal-dialog {
+  --bs-modal-width: 800px !important;
+} */
+
+.toggle-icon svg {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+.toggle-icon-lg svg {
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+}
+.toggle-icon-lg svg path,
+.toggle-icon svg path {
+  fill: #00e5ff;
+}
