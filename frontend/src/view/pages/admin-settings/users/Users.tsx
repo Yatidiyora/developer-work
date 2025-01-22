@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DynamicDataTable } from "../../../data-table/DynamicDataTable";
 import userColumns from "./UsersColumns";
 import ManageUserApi from "../../../../api/ManageUserApi";
@@ -6,14 +6,15 @@ import { trackPromise } from "react-promise-tracker";
 import { useToogle } from "../../../../hooks/useToogle";
 import { ACTION_TYPE } from "../../../../common/types/enum/CommonEnum";
 import UserModal from "../../../common/modals/UserModal";
-import { User } from "../../../../common/types/interface/UserModal.interface";
+import {
+  User,
+  UserActionState,
+} from "../../../../common/types/interface/UserModal.interface";
 import { initialUser } from "../../../../common/types/constants/CommonConstants";
+import DeleteModal from "../../../common/modals/DeleteModal";
 
 const Users = () => {
-  const [action, setAction] = useState<{
-    user: User;
-    actionType: ACTION_TYPE;
-  }>();
+  const [action, setAction] = useState<UserActionState>();
   const userColumn = userColumns({ setAction });
   const { status, toogleStatus } = useToogle();
 
@@ -31,8 +32,25 @@ const Users = () => {
     );
   };
 
+  const deleteUser = async (id: string) => {
+    return await trackPromise(
+      userInstance.deleteUserById(id)
+    );
+  }
+
+  const DeleteModalSource = useMemo(() => {
+    return <div>
+      <p>Are you sure you want to delete this user!</p>
+    </div>;
+  }, [action?.user]);
+
   const addUserModel = () => {
-    setAction({ user: initialUser, actionType: ACTION_TYPE.ADD });
+    setAction({
+      user: initialUser,
+      actionType: ACTION_TYPE.ADD,
+      userDelete: false,
+      userDeleteId: "",
+    });
   };
   return (
     <div className="containt-management">
@@ -53,6 +71,18 @@ const Users = () => {
             modalTitle={
               action.actionType === ACTION_TYPE.EDIT ? "Edit User" : "Add User"
             }
+          />
+        )}
+        {action?.actionType === ACTION_TYPE.DELETE && (
+          <DeleteModal
+            action={action}
+            setAction={setAction}
+            stateChange={toogleStatus}
+            actionTitle={"userDelete"}
+            modalHeading={"Delete User"}
+            modalSubHeading={action.user.userName}
+            renderFieldComponent={DeleteModalSource}
+            actionFun={deleteUser}
           />
         )}
       </div>

@@ -74,6 +74,17 @@ class ManageUserApi extends BaseApi {
       return null;
     }
   }
+
+  public async deleteUserById(id: string) {
+    try {
+      const response = await this.delete<SuccessResponse>(`user/${id}`);
+      ToastService({ type: ToastType.SUCCESS, message: response.data.message || "User Deleted Successfully" });
+      return response.data;
+    } catch (error: AxiosError | any) {
+      ToastService({ type: ToastType.ERROR, message: error.response.data || "Failed To Deleted User"});
+      return error.response.data;
+    }
+  }
 }
 
 export default ManageUserApi;

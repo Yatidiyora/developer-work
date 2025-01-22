@@ -1,28 +1,23 @@
 import { ErrorMessage, Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import DataTable from "react-data-table-component";
-import {
-  ROLE_MODAL_FIELDS,
-  USER_MODAL_FIELDS,
-} from "../../../common/types/constants/FormikConstants";
-import { ACTION_TYPE } from "../../../common/types/enum/CommonEnum";
-import { userRolesCustomStyles } from "../../../common/types/constants/CommonCustomeStyleObject";
+import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { trackPromise } from "react-promise-tracker";
 import ManageRoleApi from "../../../api/ManageRoleApi";
-import ManageUserApi from "../../../api/ManageUserApi";
+import PermissionsApi from "../../../api/PermissionsApi";
+import { userRolesCustomStyles } from "../../../common/types/constants/CommonCustomeStyleObject";
+import { ROLE_MODAL_FIELDS } from "../../../common/types/constants/FormikConstants";
+import { ACTION_TYPE } from "../../../common/types/enum/CommonEnum";
 import {
   PermissionsType,
-  Role,
   RoleModalProps,
   RolePermissions,
   RolePermissionsResponse,
   TogglerType,
 } from "../../../common/types/interface/RoleModal.interface";
 import RolePermissionToggleColumns from "../../pages/admin-settings/roles/RolePermissionToggleColumns";
-import PermissionsApi from "../../../api/PermissionsApi";
 
 const RoleModal = (props: RoleModalProps) => {
   const { action, setAction, stateChange, modalTitle } = props;
@@ -32,24 +27,15 @@ const RoleModal = (props: RoleModalProps) => {
     assignedPermissions: {},
   });
   const userRolesInstance = ManageRoleApi.getManageRoleInstance();
-  const userInstance = ManageUserApi.getManageUserInstance();
   const permissionInstance = PermissionsApi.getInstance();
 
   const [selectedRoles, setSelectedRoles] = useState<RolePermissions[]>([]);
 
-  const handleLeftChange = ({
-    selectedRows,
-  }: {
-    selectedRows: any[];
-  }) => {
+  const handleLeftChange = ({ selectedRows }: { selectedRows: any[] }) => {
     setSelectedRoles(selectedRows);
   };
 
-  const handleRightChange = ({
-    selectedRows,
-  }: {
-    selectedRows: any[];
-  }) => {
+  const handleRightChange = ({ selectedRows }: { selectedRows: any[] }) => {
     setSelectedRoles(selectedRows);
   };
 
@@ -132,14 +118,6 @@ const RoleModal = (props: RoleModalProps) => {
 
   const assignedColumns = RolePermissionToggleColumns({ setToggler });
 
-  const getUserRoles = async (size: number, offSet: number) => {
-    return await trackPromise(userRolesInstance.getRoles(size, offSet));
-  };
-
-  const getUserById = async (id: string | undefined) => {
-    return await trackPromise(userInstance.getUserById(id));
-  };
-
   const defaultPermissions = async () => {
     const allPermissions: RolePermissionsResponse = await trackPromise(
       permissionInstance.getAllRolePermissions()
@@ -151,7 +129,6 @@ const RoleModal = (props: RoleModalProps) => {
       const role = await trackPromise(
         userRolesInstance.getRoleById(action.role.id)
       );
-      console.log("role: ", role);
 
       const rolePermissionsIds = role.result.permissions
         ? role.result.permissions?.map((row) =>
@@ -217,7 +194,12 @@ const RoleModal = (props: RoleModalProps) => {
   }, []);
 
   return (
-    <Modal className="role-modal" show={action ? true : false} size="lg" onHide={handleClose}>
+    <Modal
+      className="role-modal"
+      show={action ? true : false}
+      size="lg"
+      onHide={handleClose}
+    >
       <Modal.Header className="default-filter__header" closeButton>
         <Modal.Title style={{ fontSize: "16px", fontWeight: "bold" }}>
           {modalTitle}{" "}
@@ -228,15 +210,18 @@ const RoleModal = (props: RoleModalProps) => {
           <Formik
             initialValues={action.role}
             onSubmit={(values) => {
-              console.log(values);
-              const permissions = Object.entries(toggler.assignedPermissions).map(([key, value]) => {return {
-                roleId: action.role.id,
-                permissionName: value.name,
-                permissionId: key,
-                view: Number(value.view || false),
-                edit: Number(value.edit || false),
-                delete: Number(value.delete || false),
-              }});
+              const permissions = Object.entries(
+                toggler.assignedPermissions
+              ).map(([key, value]) => {
+                return {
+                  roleId: action.role.id,
+                  permissionName: value.name,
+                  permissionId: key,
+                  view: Number(value.view || false),
+                  edit: Number(value.edit || false),
+                  delete: Number(value.delete || false),
+                };
+              });
               const role = {
                 name: values[rolenameObjectTitle],
                 permissions,
@@ -268,11 +253,9 @@ const RoleModal = (props: RoleModalProps) => {
             {({ handleChange, handleSubmit, values }) => (
               <Form className="p-4" onSubmit={handleSubmit}>
                 <Row className="mb-3 align-items-center">
-                  {/* Label */}
                   <Col md={2}>
                     <Form.Label>{rolenameFieldTitle}</Form.Label>
                   </Col>
-                  {/* Input Field */}
                   <Col md={5}>
                     <Form.Control
                       className="input-field"
@@ -296,7 +279,9 @@ const RoleModal = (props: RoleModalProps) => {
                         <DataTable
                           title="Available Permissions"
                           columns={availableColumn}
-                          data={Object.entries(toggler.availablePermissions).map(([key, value]) => {
+                          data={Object.entries(
+                            toggler.availablePermissions
+                          ).map(([key, value]) => {
                             return {
                               id: key,
                               ...value,
@@ -347,12 +332,14 @@ const RoleModal = (props: RoleModalProps) => {
                         <DataTable
                           title="Assigned Permissions"
                           columns={assignedColumns}
-                          data={Object.entries(toggler.assignedPermissions).map(([key, value]) => {
-                            return {
-                              id: key,
-                              ...value,
-                            };
-                          })}
+                          data={Object.entries(toggler.assignedPermissions).map(
+                            ([key, value]) => {
+                              return {
+                                id: key,
+                                ...value,
+                              };
+                            }
+                          )}
                           selectableRows
                           onSelectedRowsChange={handleRightChange}
                           clearSelectedRows={cleasrSelected}

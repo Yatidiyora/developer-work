@@ -36,6 +36,13 @@ export interface GetUserById {
   status: string;
 }
 
+export interface UserActionState {
+  user: User;
+  actionType: ACTION_TYPE;
+  userDelete: boolean;
+  userDeleteId: string;
+}
+
 export interface UserModalProps {
   action: {
     user: User;
@@ -43,10 +50,7 @@ export interface UserModalProps {
   };
   setAction: React.Dispatch<
     React.SetStateAction<
-      | {
-          user: User;
-          actionType: ACTION_TYPE;
-        }
+      | UserActionState
       | undefined
     >
   >;
