@@ -1,18 +1,21 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { TABLES } from '../../types/enums/CommonEnums';
 
-export class OrdersDetailsModel extends Model {
+export class CustomerOrdersDetailsModel extends Model {
   public id: string;
   public customerId: string;
+  public orderCategoryId: string;
   public orderName: string;
-  public orderDate: string;
-  public orderAmount: number;
+  public orderSerialNumber: string;
+  public orderDeliveryAddress: string;
+  public orderDeliveryStatus: string;
+  public orderPrice: string;
   public createdAt: Date;
   public updatedAt: Date;
 }
 
-export const initOrdersDetailsModel = (sequelize: Sequelize) => {
-  OrdersDetailsModel.init(
+export const initCustomerOrdersDetailsModel = (sequelize: Sequelize) => {
+  CustomerOrdersDetailsModel.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -22,13 +25,22 @@ export const initOrdersDetailsModel = (sequelize: Sequelize) => {
       customerId: {
         type: DataTypes.UUID,
       },
+      orderCategoryId: {
+        type: DataTypes.UUID,
+      },
       orderName: {
         type: DataTypes.STRING,
       },
-      orderDate: {
+      orderSerialNumber: {
         type: DataTypes.STRING,
       },
-      orderAmount: {
+      orderDeliveryAddress: {
+        type: DataTypes.STRING,
+      },
+      orderDeliveryStatus: {
+        type: DataTypes.STRING,
+      },
+      orderPrice: {
         type: DataTypes.STRING,
       },
     },
@@ -36,7 +48,7 @@ export const initOrdersDetailsModel = (sequelize: Sequelize) => {
       sequelize,
       freezeTableName: true,
       underscored: true,
-      tableName: TABLES.ORDER_DETAILS,
+      tableName: TABLES.CUSTOMER_ORDERS_DETAILS,
     },
   ).sync();
 };

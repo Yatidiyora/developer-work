@@ -60,7 +60,8 @@ export enum TABLES {
   ROLE_PERMISSION_DETAILS = 'role_permission_details',
   CONFIGURATION = 'configuration',
   CUSTOMER_DETAILS = 'customer_details',
-  ORDER_DETAILS = 'order_details',
+  CUSTOMER_ORDERS_DETAILS = 'customer_orders_details',
+  ORDER_CATEGORY_DETAILS = 'order_category_details',
 }
 
 export enum MODULE {
@@ -156,6 +157,7 @@ export enum DB_MODELS {
   RolePermissionDetailsModel = 'RolePermissionDetailsModel',
   PermissionDetailsModel = 'PermissionDetailsModel',
   CustomerDetailsModel = 'CustomerDetailsModel',
+  CustomerOrdersDetailsModel = 'CustomerOrdersDetailsModel',
 }
 
 export enum DB_DATA_FUNCTIONS_TYPES {

@@ -7,7 +7,8 @@ import { initRolePermissionDetailsModel, RolePermissionDetailsModel } from './Ro
 import { initUserDetailsModel, UserDetailsModel } from './UserDetailsModel';
 import { initUserRoleMappingModel, UserRoleMappingModel } from './UserRoleMappingModel';
 import { initCustomerDetailsModel, CustomerDetailsModel } from './CustomerDetailsModel';
-import { initOrdersDetailsModel, OrdersDetailsModel } from './OrdersDetailsModel';
+import { initCustomerOrdersDetailsModel, CustomerOrdersDetailsModel } from './CustomerOrdersDetailsModel';
+import { initOrderCategoryModel, OrderCategoryModel } from './OrderCategoryModel';
 
 let sequelize: Sequelize;
 const initPgDB = () => {
@@ -38,7 +39,8 @@ const initPgDB = () => {
   initPermissionDetailsModel(sequelize);
   initUserRoleMappingModel(sequelize);
   initCustomerDetailsModel(sequelize);
-  initOrdersDetailsModel(sequelize);
+  initCustomerOrdersDetailsModel(sequelize);
+  initOrderCategoryModel(sequelize);
 };
 
 export {
@@ -51,5 +53,6 @@ export {
   UserDetailsModel,
   UserRoleMappingModel,
   CustomerDetailsModel,
-  OrdersDetailsModel,
+  CustomerOrdersDetailsModel,
+  OrderCategoryModel,
 };
