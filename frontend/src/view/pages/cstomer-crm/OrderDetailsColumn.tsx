@@ -2,9 +2,9 @@ import moment from 'moment';
 import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { AiTwotoneDelete } from 'react-icons/ai';
 import { RiEditLine } from 'react-icons/ri';
-import { ACTION_TYPE, FORMAT, RoutesPath } from '../../../common/types/enum/CommonEnum';
+import { ACTION_TYPE, FORMAT } from '../../../common/types/enum/CommonEnum';
+import { OrderDetails } from '../../../common/types/interface/Customer.interface';
 
 const OrderDetailsColumn = ({
     setAction
@@ -14,62 +14,83 @@ const OrderDetailsColumn = ({
       actionType: any;
   } | undefined>> 
 }) => {
-  const formatDate = (date: Date): string => {
+  const formatDate = (date: string): string => {
     const format = date ? moment(date).utc().format(FORMAT.NORAML_DATE) : 'N/A';
     return format;
   };
 
   return [
+    // {
+    //   name: 'Actions',
+    //   cell: (row: OrderDetails) => (
+    //     <DropdownButton id="dropdown-item-button" title="Action">
+    //         <Dropdown.Item
+    //         onClick={() => {
+    //                       setAction({ customerOrder: row, actionType: ACTION_TYPE.EDIT });
+    //                     }}
+    //           as="button"
+    //         >
+    //           <i className="dropdown-icon">
+    //             <RiEditLine />
+    //           </i>
+    //           Review
+    //         </Dropdown.Item>
+    //     </DropdownButton>
+    //   ),
+    // },
     {
-      name: 'Actions',
-      cell: (row: any) => (
-        <DropdownButton id="dropdown-item-button" title="Action">
-            <Dropdown.Item
-            onClick={() => {
-                          setAction({ customerOrder: row, actionType: ACTION_TYPE.EDIT });
-                        }}
-              as="button"
-            >
-              <i className="dropdown-icon">
-                <RiEditLine />
-              </i>
-              Review
-            </Dropdown.Item>
-        </DropdownButton>
-      ),
-    },
-    {
-      id: 'customerName',
-      name: 'Customer Name',
-      selector: (row: any) => row.customerName,
+      id: 'orderName',
+      name: 'Order Name',
+      selector: (row: OrderDetails) => row.orderName,
       wrap: true,
       sortable: true,
     },
     {
-      id: 'userName',
-      name: 'User Name',
-      selector: (row: any) => row.userName,
+      id: 'orderCategoryType',
+      name: 'order Category Type',
+      selector: (row: OrderDetails) => row.orderCategoryType,
       wrap: true,
       sortable: true,
     },
     {
-      id: 'email',
-      name: 'Email',
-      selector: (row: any) => row.email,
+      id: 'orderPrice',
+      name: 'Order Price',
+      selector: (row: OrderDetails) => row.orderPrice,
+      wrap: true,
+      sortable: true,
+    },
+    {
+      id: 'orderSerialNumber',
+      name: 'Order Serial Number',
+      selector: (row: OrderDetails) => row.orderSerialNumber,
+      wrap: true,
+      sortable: true,
+    },
+    {
+      id: 'orderDeliveryAddress',
+      name: 'Order Delivery Address',
+      selector: (row: OrderDetails) => row.orderDeliveryAddress,
+      wrap: true,
+      sortable: true,
+    },
+    {
+      id: 'orderDeliveryStatus',
+      name: 'Order Delivery Status',
+      selector: (row: OrderDetails) => row.orderDeliveryStatus,
       wrap: true,
       sortable: true,
     },
     {
       id: 'createdAt',
       name: 'Created At',
-      selector: (row: any) => formatDate(row.createdAt),
+      selector: (row: OrderDetails) => formatDate(row.createdAt),
       wrap: true,
       sortable: true,
     },
     {
       id: 'updatedAt',
       name: 'Updated At',
-      selector: (row: any) => formatDate(row.updatedAt),
+      selector: (row: OrderDetails) => formatDate(row.updatedAt),
       wrap: true,
       sortable: true,
     },

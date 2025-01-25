@@ -124,8 +124,8 @@ html, body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  min-width: 100vw;
-  max-width: 2000px;
+  width: 100vw;
+  /* max-width: 2000px; */
 }
 
 .app-body {
