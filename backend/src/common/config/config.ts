@@ -5,7 +5,7 @@ const getConfig = () => {
       USERNAME: process.env.DB_USERNAME ?? "",
       PASSWORD: process.env.DB_PASSWORD ?? "",
       HOST: process.env.DB_HOST,
-      PORT: (Number(process.env.DB_PORT)) ?? 5432,
+      PORT: (Number(process.env.DB_PORT)) ?? 18983,
     },
     SAML: {
       CALLBACK_URL: process.env.CALLBACK_URL,

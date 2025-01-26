@@ -19,7 +19,7 @@ const initPgDB = () => {
   sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
     schema: 'public',
     host: HOST,
-    port: 5432,
+    port: PORT,
     logging: false,
     dialect: 'postgres',
     dialectOptions: {

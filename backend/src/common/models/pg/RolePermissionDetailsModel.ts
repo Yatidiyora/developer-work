@@ -48,6 +48,12 @@ export const initRolePermissionDetailsModel = (sequelize: Sequelize) => {
       },
     },
     {
+      indexes: [
+        {
+          unique: true,
+          fields: ['role_id', 'permission_id'], // Define composite unique constraint
+        },
+      ],
       sequelize,
       freezeTableName: true,
       underscored: true,

@@ -157,6 +157,7 @@ export const addRoleToDb = async (req: Request, res: Response) => {
     const permissionSource: DataConditions = {
       modelName: DB_MODELS.RolePermissionDetailsModel,
       functionType: DB_DATA_FUNCTIONS_TYPES.bulkCreateDataInTable,
+      updateColumns: UPDATE_COLUMNS.ROLE_PERMISSIONS,
       upsertObjects: newRolePermissions,
       ignoreDuplicates: true,
     };
