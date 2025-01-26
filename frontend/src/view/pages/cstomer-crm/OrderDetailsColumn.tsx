@@ -53,6 +53,13 @@ const OrderDetailsColumn = ({
       sortable: true,
     },
     {
+      id: 'subCategoryType',
+      name: 'Sub Category Type',
+      selector: (row: OrderDetails) => row.subCategoryType,
+      wrap: true,
+      sortable: true,
+    },
+    {
       id: 'orderPrice',
       name: 'Order Price',
       selector: (row: OrderDetails) => row.orderPrice,

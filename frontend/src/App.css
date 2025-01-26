@@ -742,7 +742,7 @@ html, body {
 
 .details-container .row:hover {
   background: rgba(255, 255, 255, 0.1); /* Subtle highlight on hover */
-  transform: scale(1.02); /* Slight zoom effect */
+  transform: scale(1.01); /* Slight zoom effect */
 }
 
 /* Hover effects for titles and values */
