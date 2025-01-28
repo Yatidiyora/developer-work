@@ -9,6 +9,7 @@ export interface OrderDetails {
   orderPrice:string;
   orderId:string;
   orderCategoryType:string;
+  subCategoryType:string;
   createdAt: string;
   updatedAt: string;
 }

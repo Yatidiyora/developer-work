@@ -23,6 +23,7 @@ export const fetchCustomerOrders = async (props: any) => {
         'updatedAt',
         [col('OrderCategoryModel.id'), 'orderId'],
         [col('OrderCategoryModel.order_category_type'), 'orderCategoryType'],
+        [col('OrderCategoryModel.sub_category_type'), 'subCategoryType'],
       ],
       where: {
         [Op.or]: [
@@ -44,8 +45,8 @@ export const fetchCustomerOrders = async (props: any) => {
         },
       ],
       order: [
-        ['orderCategoryType'].includes(sortColumnName)
-          ? [{ model: OrderCategoryModel, as: 'orders' }, sortColumnName, sortOrder]
+        ['orderCategoryType','subCategoryType'].includes(sortColumnName)
+          ? [{ model: OrderCategoryModel, as: 'OrderCategoryModel' }, sortColumnName, sortOrder]
           : [sortColumnName, sortOrder],
       ],
       limit: size,
