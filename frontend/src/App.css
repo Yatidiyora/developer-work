@@ -730,7 +730,7 @@ html, body {
 }
 
 /* Row styling */
-.row {
+.details-container .row {
   margin-bottom: 15px; /* Spacing between rows */
   display: flex;
   align-items: center;
@@ -740,9 +740,9 @@ html, body {
   transition: background 0.3s;
 }
 
-.row:hover {
+.details-container .row:hover {
   background: rgba(255, 255, 255, 0.1); /* Subtle highlight on hover */
-  transform: scale(1.02); /* Slight zoom effect */
+  transform: scale(1.01); /* Slight zoom effect */
 }
 
 /* Hover effects for titles and values */

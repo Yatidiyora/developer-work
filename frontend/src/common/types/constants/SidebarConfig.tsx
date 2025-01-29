@@ -7,6 +7,7 @@ import { GrUserAdmin } from "react-icons/gr";
 import { MdAssignmentInd } from "react-icons/md";
 import { FaUserGear } from "react-icons/fa6";
 import React from "react";
+import SalesRevenue from "../../../view/pages/sales-revenue/SalesRevenue";
 
 // Sidebar and Route Configuration
 export const sidebarConfig: SidebarConfig[] = [
@@ -33,5 +34,11 @@ export const sidebarConfig: SidebarConfig[] = [
         component: () => <Roles />,
       },
     ],
+  },
+  {
+    label: "Sales Revenue",
+    path: "/sales-revenue",
+    component: () => <SalesRevenue />,
+    icon: () => <RiDashboardLine size={24}/>,
   },
 ];
