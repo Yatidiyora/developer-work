@@ -54,6 +54,18 @@ class CustomerCRMApi extends BaseApi {
       return error.response.data;
     }
   }
+
+  public async getCRMCustomerDetails(id: string | undefined) {
+    try {
+      const response = await this.get(
+        `/customer/details/${id}`
+      );
+      return response.data;
+    } catch (error: AxiosError | any) {
+      //   ToastService({ type: ToastType.ERROR, message: error.response.data.message });
+      return error.response.data;
+    }
+  }
 }
 
 export default CustomerCRMApi;

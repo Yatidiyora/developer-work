@@ -1,22 +1,21 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { DynamicDataTable } from "../../../data-table/DynamicDataTable";
-import userColumns from "./UsersColumns";
-import ManageUserApi from "../../../../api/ManageUserApi";
+import React, { useMemo, useState } from "react";
 import { trackPromise } from "react-promise-tracker";
-import { useToogle } from "../../../../hooks/useToogle";
+import ManageUserApi from "../../../../api/ManageUserApi";
+import { initialUser } from "../../../../common/types/constants/CommonConstants";
 import { ACTION_TYPE } from "../../../../common/types/enum/CommonEnum";
-import UserModal from "../../../common/modals/UserModal";
 import {
-  User,
   UserActionState,
 } from "../../../../common/types/interface/UserModal.interface";
-import { initialUser } from "../../../../common/types/constants/CommonConstants";
+import { useToggle } from "../../../../hooks/useToogle";
 import DeleteModal from "../../../common/modals/DeleteModal";
+import UserModal from "../../../common/modals/UserModal";
+import { DynamicDataTable } from "../../../data-table/DynamicDataTable";
+import userColumns from "./UsersColumns";
 
 const Users = () => {
   const [action, setAction] = useState<UserActionState>();
   const userColumn = userColumns({ setAction });
-  const { status, toogleStatus } = useToogle();
+  const { status, toggleStatus } = useToggle();
 
   const userInstance = ManageUserApi.getManageUserInstance();
 
@@ -54,7 +53,6 @@ const Users = () => {
   };
   return (
     <div className="containt-management">
-      {/* Page Header */}
       <div className="containt-management-header">
         <h2>Users Management</h2>
         <button onClick={addUserModel} className="add-user-btn">
@@ -67,7 +65,7 @@ const Users = () => {
           <UserModal
             action={action}
             setAction={setAction}
-            stateChange={toogleStatus}
+            stateChange={toggleStatus}
             modalTitle={
               action.actionType === ACTION_TYPE.EDIT ? "Edit User" : "Add User"
             }
@@ -77,7 +75,7 @@ const Users = () => {
           <DeleteModal
             action={action}
             setAction={setAction}
-            stateChange={toogleStatus}
+            stateChange={toggleStatus}
             actionTitle={"userDelete"}
             modalHeading={"Delete User"}
             modalSubHeading={action.user.userName}
@@ -86,9 +84,7 @@ const Users = () => {
           />
         )}
       </div>
-      {/* Table Container (Dynamic Content) */}
       <div className="containt-table-container">
-        {/* Your dynamic table component will go here */}
         <DynamicDataTable
           columns={userColumn}
           tableDataGetApi={getUsers}

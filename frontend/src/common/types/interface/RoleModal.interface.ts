@@ -1,3 +1,4 @@
+import React from 'react';
 import { ACTION_TYPE } from "../enum/CommonEnum";
 
 export interface Role {
