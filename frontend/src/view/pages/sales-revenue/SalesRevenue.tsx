@@ -2,7 +2,7 @@ import * as am5 from "@amcharts/amcharts5";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
-import { ErrorMessage, Field, Formik, Form as FormikForm} from "formik";
+import { ErrorMessage, Field, Formik, Form as FormikForm } from "formik";
 import * as Yup from "yup";
 import { DefaultCustomSelect } from "../../../common/common-components/ReactSelectComponent";
 import {
@@ -14,11 +14,17 @@ import { simpleColumnSeriesChart } from "../../common/charts/ColumnSeriesChart";
 import { CHART_ROOT_TAGS } from "../../../common/types/constants/ChartRootTagsConstants";
 import { ColumnSeriesProps } from "../../../common/types/interface/ChartRender.interface";
 import { salesRevenueRecords } from "../../../test/test-objects/TestObjects";
+import SalesRevenueApi from "../../../api/SalesRevenueApi";
+import { DATE_CATEGORY_TYPE } from "../../../common/types/enum/CommonEnum";
 
 const categoryOptions = [
-  { value: "electronics", label: "Electronics" },
-  { value: "clothing", label: "Clothing" },
-  { value: "furniture", label: "Furniture" },
+  { value: "ELECTRONICS", label: "Electronics" },
+  { value: "CLOTHING", label: "Clothing" },
+  { value: "BEAUTY_PERSONAL_CARE", label: "Beauty Personal Care" },
+  { value: "BOOKS", label: "Books" },
+  { value: "FURNITURE", label: "Furniture" },
+  { value: "HOME_APPLIANCES", label: "Home Appliances" },
+  { value: "SPORTS_OUTDOORS", label: "Sports Outdoors" },
 ];
 
 const subCategoryOptions = {
@@ -84,7 +90,7 @@ const SearchSchema = Yup.object().shape({
   }),
 });
 
-const ExpandableRow = (props) => {
+const SearchExpandableRow = (props) => {
   const { title, setSearchValues } = props;
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -109,15 +115,22 @@ const ExpandableRow = (props) => {
 
   const handleSubmit = (values, { setSubmitting }) => {
     setSearchValues(values);
-    // console.log("Form Submitted:", values);
-    // setSubmitting(false); // Ensure Formik knows the submission is complete
+    console.log("Form Submitted:", values);
+    setSubmitting(true); // Ensure Formik knows the submission is complete
   };
 
   return (
     <div className={`expandable-container ${isExpanded ? "expanded" : ""}`}>
       <Row className="align-items-center">
         <Col>
-          <div onClick={toggleExpand} style={{ cursor: 'pointer', display: "flex", justifyContent: "space-between" }}>
+          <div
+            onClick={toggleExpand}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <div>{title}</div>
             <button className="icon-button">
               {isExpanded ? (
@@ -136,10 +149,10 @@ const ExpandableRow = (props) => {
             validationSchema={SearchSchema}
             onSubmit={handleSubmit}
           >
-            {({ values, setFieldValue, isSubmitting }) => (
+            {({ values, setFieldValue }) => (
               <FormikForm>
                 <Row>
-                  <Col style={{marginBottom: '10px'}} md={3}>
+                  <Col style={{ marginBottom: "10px" }} md={3}>
                     <Form.Group>
                       <Form.Label className="default-filter-form__label">
                         {"Category"}
@@ -266,7 +279,7 @@ const ExpandableRow = (props) => {
                 </Row>
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  // disabled={isSubmitting}
                   style={{ marginTop: "30px" }}
                 >
                   Search
@@ -280,28 +293,32 @@ const ExpandableRow = (props) => {
   );
 };
 
-
-
 const SalesRevenue = () => {
-  const [searchValues, setSearchValues] = useState();
+  const [searchValues, setSearchValues] = useState<any>();
+  const [salesRevenue, setSalesRevenue] = useState<any>([]);
+  console.log("salesRevenue: ", salesRevenue);
 
-  const stats = salesRevenueRecords.reduce(
+  const salesRevenueInstance = SalesRevenueApi.getSalesRevenueInstance();
+
+  const stats = salesRevenue?.reduce(
     (acc, record) => {
-        // Update revenue min and max
-        acc.revenue.min = Math.min(acc.revenue.min, record.revenue);
-        acc.revenue.max = Math.max(acc.revenue.max, record.revenue);
+      // Update revenue min and max
+      acc.revenue.min = Math.min(acc.revenue.min, record.productRevenue);
+      acc.revenue.max = Math.max(acc.revenue.max, record.productRevenue);
 
-        // Update salesOrder min and max
-        acc.salesOrder.min = Math.min(acc.salesOrder.min, record.salesOrder);
-        acc.salesOrder.max = Math.max(acc.salesOrder.max, record.salesOrder);
+      // Update salesOrder min and max
+      acc.salesOrder.min = Math.min(acc.salesOrder.min, record.salesOrder);
+      acc.salesOrder.max = Math.max(acc.salesOrder.max, record.salesOrder);
 
-        return acc;
+      return acc;
     },
     {
-        revenue: { min: Infinity, max: -Infinity }, // Initialize revenue min and max
-        salesOrder: { min: Infinity, max: -Infinity }, // Initialize salesOrder min and max
+      revenue: { min: Infinity, max: -Infinity }, // Initialize revenue min and max
+      salesOrder: { min: Infinity, max: -Infinity }, // Initialize salesOrder min and max
     }
-);
+  );
+
+
 
   const seriesProps: ColumnSeriesProps[] = [
     {
@@ -310,14 +327,15 @@ const SalesRevenue = () => {
       yStroke: am5.color(0x808080),
       strokeDasharray: [4, 4],
       strokeOpacity: 0.2,
-      min: stats.revenue.min,
-      max: stats.revenue.max,
+      yFill: am5.color('#535B9E'),
+      min: 0,
+      max: stats.revenue.max + (stats.revenue.min / 10),
       numberFormat: "'$'#",
       boundschanged: 20,
-      name: "Revenue",
-      valueYField: "revenue",
+      name: "ProductRevenue",
+      valueYField: "productRevenue",
       yVisible: true,
-      categoryXField: "category",
+      categoryXField: "subCategoryType",
       stroke: am5.color("#535B9E"),
       fill: am5.color("#535B9E"),
       shadowBlur: 1,
@@ -332,21 +350,22 @@ const SalesRevenue = () => {
         ],
         rotation: 360,
       },
-      tooltip:
-        "Revenue: ${revenue}\nSales Orders: {salesOrder}",
+      tooltip: "Revenue: ${productRevenue}\nSales Orders: {salesOrder}",
     },
     {
+      opposite: true,
       fontSize: "12px",
       gridVisible: false,
       yStroke: am5.color(0x808080),
       strokeDasharray: [4, 4],
       strokeOpacity: 0.2,
-      min: stats.salesOrder.min,
-      max: stats.salesOrder.max,
+      yFill: am5.color('#FFA45F'),
+      min: 0,
+      max: stats.salesOrder.max + (stats.salesOrder.max / 10),
       name: "SalesOrders",
       valueYField: "salesOrder",
-      yVisible: false,
-      categoryXField: "category",
+      yVisible: true,
+      categoryXField: "subCategoryType",
       stroke: am5.color("#FFA45F"),
       fill: am5.color("#FFA45F"),
       shadowOffsetX: 2,
@@ -369,26 +388,61 @@ const SalesRevenue = () => {
   useEffect(() => {
     let root1: am5.Root;
     root1 = simpleColumnSeriesChart(
-      salesRevenueRecords,
+      salesRevenue,
       CHART_ROOT_TAGS.SALES_REVENUE_TAG,
-      "category",
+      "subCategoryType",
       seriesProps
     );
 
     return () => {
       root1.dispose();
     };
-  }, []);
+  }, [salesRevenue]);
+  useEffect(() => {
+    const searchRevenue = async () => {
+      const orderCategoryType = searchValues?.category;
+      const subCategoryType = searchValues?.subCategory;
+      const rangeValue = { categoryType: searchValues?.dateType };
+      console.log('searchValues?.dateType:', searchValues?.dateType);
+      console.log('Object.values(DATE_CATEGORY_TYPE):', Object.values(DATE_CATEGORY_TYPE));
+      
+      if (
+        searchValues?.dateType &&
+        Object.values(DATE_CATEGORY_TYPE).slice(0,-1).includes(searchValues?.dateType)
+      ) {
+        rangeValue["rangeValue"] = searchValues[searchValues?.dateType];
+      } else if (searchValues?.dateType === DATE_CATEGORY_TYPE.RANGE) {
+        rangeValue["rangeValue"] = [
+          searchValues["startDate"],
+          searchValues["endDate"],
+        ];
+      }
+      const dateCategory = {
+        ...rangeValue,
+      };
+      const searchObject = {
+        orderCategoryType,
+        subCategoryType,
+        dateCategory,
+      };
+      const salesRevenue = await salesRevenueInstance.getSalesRevenue(JSON.stringify(searchObject));
+      setSalesRevenue(salesRevenue.result);
+    };
+    searchValues && searchRevenue();
+  }, [searchValues]);
   return (
     <div className="containt-management">
       <div className="containt-management-header">
-        <ExpandableRow title={"Search Sales Revenue"} setSearchValues={setSearchValues}/>
+        <SearchExpandableRow
+          title={"Search Sales Revenue"}
+          setSearchValues={setSearchValues}
+        />
       </div>
       <div className="graph-container">
-      <div
-            id={CHART_ROOT_TAGS.SALES_REVENUE_TAG}
-            style={{ width: "100%", height: "300px" }}
-          />
+        <div
+          id={CHART_ROOT_TAGS.SALES_REVENUE_TAG}
+          style={{ width: "100%", height: "300px" }}
+        />
       </div>
     </div>
   );

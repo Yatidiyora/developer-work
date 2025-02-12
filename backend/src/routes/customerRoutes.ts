@@ -8,5 +8,6 @@ const router = express.Router();
 
 router.get('/', validatePermission(MODULE.CUSTOMER, ACTION.VIEW), CustomerService.fetchAllCustomers);
 router.get('/orders', validatePermission(MODULE.CUSTOMER, ACTION.VIEW), fetchAllCustomerOrders);
+router.get('/details/:id', validatePermission(MODULE.CUSTOMER, ACTION.VIEW), CustomerService.fetchCustomerDetails);
 
 export default router;

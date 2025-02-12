@@ -2,6 +2,8 @@ import { col, Op, Sequelize } from 'sequelize';
 import { CustomerOrdersDetailsModel, OrderCategoryModel, sequelize } from '../../../common/models/pg';
 import { customerOrdersJoinKey } from '../../../common/types/constants/RelationKeysConstants';
 import { getCustomLogger } from '../../../common/utils/Logger';
+import { DATE_CATEGORY_TYPE, SORT } from '../../../common/types/enums/CommonEnums';
+import { SalesRevenueRecord } from 'interfaces/SalesRevenue';
 
 const logger = getCustomLogger('Customer-orders::repository::CustomerOrdersRepository');
 
@@ -45,15 +47,62 @@ export const fetchCustomerOrders = async (props: any) => {
         },
       ],
       order: [
-        ['orderCategoryType','subCategoryType'].includes(sortColumnName)
+        ['orderCategoryType', 'subCategoryType'].includes(sortColumnName)
           ? [{ model: OrderCategoryModel, as: 'OrderCategoryModel' }, sortColumnName, sortOrder]
           : [sortColumnName, sortOrder],
       ],
       limit: size,
       offset,
       raw: true,
-      logging: true,
     });
+  } catch (error) {
+    logger.error('Failed to fetch customer orders details', error.message || error);
+    throw error;
+  }
+};
+
+export const getSalesOrderRevenue = async (props: any): Promise<SalesRevenueRecord[]> => {
+  const { searchObject, dateRangeObject } = props;
+  const searchArray = Object.keys(searchObject);
+  const dateRangeTypeArray = Object.keys(dateRangeObject);
+  try {
+    CustomerOrdersDetailsModel.belongsTo(OrderCategoryModel, customerOrdersJoinKey);
+    return (await CustomerOrdersDetailsModel.findAll({
+      attributes: [
+        [col('OrderCategoryModel.order_category_type'), 'orderCategoryType'],
+        [col('OrderCategoryModel.sub_category_type'), 'subCategoryType'],
+        [Sequelize.fn('COUNT', Sequelize.col('*')), 'salesOrder'],
+        [Sequelize.fn('SUM', Sequelize.col('order_price')), 'productRevenue'],
+      ],
+      where: {
+        [Op.and]: [
+          ...searchArray.map((field) =>
+            Sequelize.where(Sequelize.col(`OrderCategoryModel.${field}`), { [Op.eq]: searchObject[field] }),
+          ),
+          ...dateRangeTypeArray.map((rangeType: DATE_CATEGORY_TYPE) => {
+            if (Object.values(DATE_CATEGORY_TYPE).slice(0, -2).includes(rangeType)) {
+              return Sequelize.where(
+                Sequelize.fn('EXTRACT', Sequelize.literal(`${rangeType.toUpperCase()} FROM "order_date"`)),
+                dateRangeObject[rangeType],
+              );
+            } else if (Object.values(DATE_CATEGORY_TYPE).slice(2).includes(rangeType)) {
+              return { order_date: dateRangeObject[rangeType] };
+            }
+          }),
+        ],
+      },
+      include: [
+        {
+          model: OrderCategoryModel,
+          attributes: [], // Select specific fields from orders
+          required: true,
+        },
+      ],
+      group: ['OrderCategoryModel.sub_category_type', 'OrderCategoryModel.order_category_type'],
+      order: [['productRevenue', SORT.DESC]],
+      raw: true,
+      logging: true,
+    })) as unknown as SalesRevenueRecord[];
   } catch (error) {
     logger.error('Failed to fetch customer orders details', error.message || error);
     throw error;

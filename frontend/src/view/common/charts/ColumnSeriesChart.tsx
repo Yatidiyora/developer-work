@@ -213,6 +213,31 @@ const simpleColumnSeriesChart = (
   };
 
   const marginSeries = seriesProps.map((series) => seriesCreator(series));
+  
+
+  // Enable cursor and tooltip display
+  const cursor = chart.set(
+    "cursor",
+    am5xy.XYCursor.new(root, {
+      behavior: "zoomX", // Adjust behavior as needed
+    })
+  );
+
+  cursor.lineX.setAll({
+    visible: false, // Hide the vertical cursor line
+    strokeOpacity: 0, // Ensure no stroke is visible
+  });
+
+  cursor.lineY.setAll({
+    visible: false, // Hide the horizontal cursor line
+    strokeOpacity: 0, // Ensure no stroke is visible
+  });
+
+  chart.appear(1000, 100);
+  marginSeries.forEach((series) => {
+    series.appear();
+  });
+
   marginSeries.forEach((series, seriesIndex) => {
     series.columns.template.adapters.add("layer", (layer, target) => {
       const dataContext = target.dataItem
@@ -241,38 +266,15 @@ const simpleColumnSeriesChart = (
       // console.log(xCategory, sortedPositions);
 
       const currentPosition = columnPositions[seriesIndex];
-      // console.log(
-      //   xCategory,
-      //   seriesIndex,
-      //   currentPosition,
-      //   sortedPositions.indexOf(currentPosition)
-      // );
+      console.log(
+        xCategory,
+        seriesIndex,
+        currentPosition,
+        sortedPositions.indexOf(currentPosition)
+      );
 
       return sortedPositions.indexOf(currentPosition);
     });
-  });
-
-  // Enable cursor and tooltip display
-  const cursor = chart.set(
-    "cursor",
-    am5xy.XYCursor.new(root, {
-      behavior: "zoomX", // Adjust behavior as needed
-    })
-  );
-
-  cursor.lineX.setAll({
-    visible: false, // Hide the vertical cursor line
-    strokeOpacity: 0, // Ensure no stroke is visible
-  });
-
-  cursor.lineY.setAll({
-    visible: false, // Hide the horizontal cursor line
-    strokeOpacity: 0, // Ensure no stroke is visible
-  });
-
-  chart.appear(1000, 100);
-  marginSeries.forEach((series) => {
-    series.appear();
   });
   return root;
 };

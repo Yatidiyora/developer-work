@@ -54,7 +54,7 @@ const CustomerOrdersReviewPage = () => {
 
   return (
     <div className="containt-management">
-      <CustomerDetailsComponent customerDetails={action.customerDetails}/>
+      <CustomerDetailsComponent customerDetails={action?.customerDetails}/>
       <div className="containt-table-container">
         {/* Your dynamic table component will go here */}
         <DynamicDataTable

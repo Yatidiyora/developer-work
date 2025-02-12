@@ -9,7 +9,7 @@ export class CustomerOrdersDetailsModel extends Model {
   public orderSerialNumber: string;
   public orderDeliveryAddress: string;
   public orderDeliveryStatus: string;
-  public orderPrice: string;
+  public orderPrice: number;
   public createdAt: Date;
   public updatedAt: Date;
 }
@@ -41,7 +41,7 @@ export const initCustomerOrdersDetailsModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING,
       },
       orderPrice: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
       },
     },
     {
