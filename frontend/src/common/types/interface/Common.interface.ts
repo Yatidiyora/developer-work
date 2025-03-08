@@ -13,3 +13,12 @@ export interface SuccessResponse {
 export interface KeyMultiTypeValue {
     [key: string]: any;
 }
+
+export type OptionType = {
+  value: string;
+  label: string;
+};
+
+export interface KeyValueAny {
+  [key: string]: any;
+}

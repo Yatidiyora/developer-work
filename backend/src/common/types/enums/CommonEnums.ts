@@ -22,6 +22,8 @@ export enum STATUS_MESSAGE {
   USER_NOT_FOUND = 'User not found',
   USER_IS_ALREADY_PRESENT = 'User is already present',
 
+  FAILED_TO_FETCH_SALES_REVENUE = 'Failed to fetch sales revenue',
+
   PERMISSIONS_NOT_FOUND = 'Permissions not found',
 
   UNAUTHORIZED = "You don't have sufficient permissions to perform action",
@@ -68,6 +70,7 @@ export enum MODULE {
   USER = 'Manage Users',
   ROLE = 'Manage Roles',
   CUSTOMER = 'Manage Customers',
+  SALES_REVENUE = 'Sales Revenue'
 }
 
 export enum ACTION {
@@ -198,4 +201,11 @@ export enum SEQUELIZE_CONDITION_TYPES {
 export enum SIGNUP_TYPE {
   SIGN_UP = 'signUp',
   LOG_IN = 'logIn'
+}
+
+export enum DATE_CATEGORY_TYPE {
+  YEAR = 'year',
+  MONTH = 'month',
+  DATE = 'date',
+  RANGE = 'range'
 }

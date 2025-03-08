@@ -46,6 +46,7 @@ export const commonDbExecution = async (source: DataConditions) => {
       requiredColumns,
       group,
       logging,
+      raw,
     } = source;
     const whereCondition = requiredWhereFields ? createWhereCondition(requiredWhereFields) : null;
     const querySource: DataConditions = {
@@ -60,6 +61,7 @@ export const commonDbExecution = async (source: DataConditions) => {
       ...(requiredColumns && { requiredColumns }),
       ...(group && { group }),
       ...(logging && { logging }),
+      ...(raw && { raw }),
     };
     const queryFunction = DB_DATA_FUNCTIONS[functionType];
     const dbResponse = await queryFunction(querySource);

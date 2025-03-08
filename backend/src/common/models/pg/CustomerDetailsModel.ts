@@ -6,6 +6,11 @@ export class CustomerDetailsModel extends Model {
   public customerName: string;
   public userName: string;
   public email: string;
+  public firstName: string;
+  public lastName: string;
+  public contactType: string;
+  public contactInfo: string;
+  public lastActiveDate: Date;
   public createdAt: Date;
   public updatedAt: Date;
 }
@@ -26,6 +31,21 @@ export const initCustomerDetailsModel = (sequelize: Sequelize) => {
       },
       email: {
         type: DataTypes.STRING,
+      },
+      firstName: {
+        type: DataTypes.STRING,
+      },
+      lastName: {
+        type: DataTypes.STRING,
+      },
+      contactType: {
+        type: DataTypes.STRING,
+      },
+      contactInfo: {
+        type: DataTypes.STRING,
+      },
+      lastActiveDate: {
+        type: DataTypes.DATE,
       },
     },
     {

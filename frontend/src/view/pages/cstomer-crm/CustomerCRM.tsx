@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { DynamicDataTable } from '../../data-table/DynamicDataTable';
 import { trackPromise } from 'react-promise-tracker';
-import { useToogle } from '../../../hooks/useToogle';
+import { useToggle } from '../../../hooks/useToogle';
 import CustomerCRMColumns from './CustomerCRMColumns';
 import CustomerCRMApi from '../../../api/CustomerCRMApi';
 
@@ -11,7 +11,7 @@ const CustomerCRM = () => {
         actionType: any;
       }>();
       const customerColumns = CustomerCRMColumns({setAction});
-      const { status, toogleStatus } = useToogle();
+      const { status } = useToggle();
     
       const customerInstance = CustomerCRMApi.getCustomerCRMInstance();
     

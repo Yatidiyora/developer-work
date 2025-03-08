@@ -52,3 +52,10 @@ export enum RoutesPath {
 export enum PERMISSION_TYPES {
   CUSTOMER_ORDER_REVIEW = 'customerOrderReview'
 }
+
+export enum DATE_CATEGORY_TYPE {
+  YEAR = 'year',
+  MONTH = 'month',
+  DATE = 'date',
+  RANGE = 'range'
+}
