@@ -3,14 +3,14 @@ import jwt from 'jsonwebtoken';
 import md5 from 'md5';
 import moment from 'moment';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import querystring from 'querystring';
 import getConfig from './common/config/config';
 import { UserDetailsModel } from './common/models/pg/UserDetailsModel';
 import { commonDbExecution } from './common/service/DbService';
 import { fetchExistingDataFromTableObject } from './common/types/constants/DbObjectConstants';
-import { DB_MODELS } from './common/types/enums/CommonEnums';
+import { DB_MODELS, SIGNUP_TYPE } from './common/types/enums/CommonEnums';
 import { GetDataResponse } from './common/types/interfaces/CommonDbTypes';
 import logger from './common/utils/Logger';
+import { addUserMethod } from './lib/users/service/UserService';
 
 const {
   SAML: { CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET },
@@ -101,14 +101,25 @@ export const samlCallback = async (
       FRONTEND: { AUTH_REDIRECT_URL },
       SECRET_KEY,
       TOKEN_EXPIRATION,
+      SIGN_UP_ROLE_ID,
     } = getConfig();
-
-    const { emails } = req.user;
+    const { type } = req.query;
+    const { emails, name: { familyName, givenName } } = req.user;
     const userName = emails[0].verified && emails[0].value;
     fetchExistingDataFromTableObject.modelName = DB_MODELS.UserDetailsModel;
     fetchExistingDataFromTableObject.requiredWhereFields[0].conditionValue = { email: userName };
     const { dataObject } = (await commonDbExecution(fetchExistingDataFromTableObject)) as GetDataResponse;
     const user = dataObject as UserDetailsModel;
+    if (!user && type === SIGNUP_TYPE.SIGN_UP) {
+      const userObject = {
+        userName: familyName.slice(0,1) + givenName,
+        firstName: givenName,
+        lastName: familyName,
+        email: userName,
+        roleIds: [SIGN_UP_ROLE_ID],
+      };
+      await addUserMethod(userObject);
+    }
     const tokenMaxAge = new Date().getTime() + (TOKEN_MAX_AGE_VALUE_IN_HOURS as unknown as number) * 60 * 60 * 1000;
     const tokenNewMaxAgeDate = moment(tokenMaxAge).utc().toDate();
     if (!user) {

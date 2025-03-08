@@ -27,7 +27,7 @@ import {
   GetDataResponse,
   GetPaginationDataResponse,
 } from '../../../common/types/interfaces/CommonDbTypes';
-import { RequestQuery } from '../../../common/types/interfaces/UserInterface';
+import { RequestQuery, UserObject } from '../../../common/types/interfaces/UserInterface';
 import { getCustomLogger } from '../../../common/utils/Logger';
 
 const logger = getCustomLogger('User::UserService');
@@ -159,6 +159,31 @@ export const userValidator = (req: Request, res: Response, next: NextFunction) =
 export const addUserAndUserroleToDb = async (req: Request, res: Response) => {
   try {
     const { userName, firstName, lastName, email, roleIds } = req.body;
+    const userObject = {
+      userName,
+      firstName,
+      lastName,
+      email,
+      roleIds,
+    };
+    await addUserMethod(userObject);
+    res.status(STATUS_CODE.SUCCESS).json({ message: STATUS_MESSAGE.USER_CREATED, status: STATUS_MESSAGE.SUCCESS });
+  } catch (error) {
+    if (error.name === ERROR.SEQUELIZE_UNIQUE_CONSTRAINT) {
+      logger.error('User is already present ', error);
+      res
+        .status(STATUS_CODE.DATA_ALREADY_PRESENT)
+        .json({ message: STATUS_MESSAGE.USER_IS_ALREADY_PRESENT, status: STATUS_MESSAGE.ERROR });
+    }
+    logger.error('Error while creating user ', error);
+    res.status(STATUS_CODE.SERVER_ERROR).json({ message: STATUS_MESSAGE.USER_NOT_ADDED, status: STATUS_MESSAGE.ERROR });
+    return;
+  }
+};
+
+export const addUserMethod = async (userProps: UserObject) => {
+  try {
+    const { userName, firstName, lastName, email, roleIds } = userProps;
     createDataObject.modelName = DB_MODELS.UserDetailsModel;
     const userId = uuidv4();
     createDataObject.addObject = {
@@ -184,17 +209,9 @@ export const addUserAndUserroleToDb = async (req: Request, res: Response) => {
       ignoreDuplicates: true,
     };
     await commonDbExecution(upserSource);
-    res.status(STATUS_CODE.SUCCESS).json({ message: STATUS_MESSAGE.USER_CREATED, status: STATUS_MESSAGE.SUCCESS });
   } catch (error) {
-    if (error.name === ERROR.SEQUELIZE_UNIQUE_CONSTRAINT) {
-      logger.error('User is already present ', error);
-      res
-        .status(STATUS_CODE.DATA_ALREADY_PRESENT)
-        .json({ message: STATUS_MESSAGE.USER_IS_ALREADY_PRESENT, status: STATUS_MESSAGE.ERROR });
-    }
-    logger.error('Error while creating user ', error);
-    res.status(STATUS_CODE.SERVER_ERROR).json({ message: STATUS_MESSAGE.USER_NOT_ADDED, status: STATUS_MESSAGE.ERROR });
-    return;
+    logger.error('Failed to create user with role', error.message || error);
+    throw error;
   }
 };
 
@@ -253,13 +270,13 @@ export const updateUserToDb = async (req: Request, res: Response) => {
       //Add and delete all the userRoleMapping if needed
       if (rolesToDelete.length) {
         deleteDataInTableObject.modelName = DB_MODELS.UserRoleMappingModel;
-      deleteDataInTableObject.requiredWhereFields[0].conditionValue = {
-        userId: id,
-        roleId: {
-          [Op.in]: rolesToDelete,
-        },
-      };
-      await commonDbExecution(deleteDataInTableObject);
+        deleteDataInTableObject.requiredWhereFields[0].conditionValue = {
+          userId: id,
+          roleId: {
+            [Op.in]: rolesToDelete,
+          },
+        };
+        await commonDbExecution(deleteDataInTableObject);
       }
       const newRoles = rolesToAdd.map((role: string) => {
         return { id: uuidv4(), userId: id, roleId: role };

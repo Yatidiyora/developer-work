@@ -44,3 +44,11 @@ export type RequestQuery = {
 export interface KeyValuePairData {
   [key: string]: string | number;
 }
+
+export interface UserObject {
+  userName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  roleIds: string[];
+}

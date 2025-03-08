@@ -194,3 +194,8 @@ export enum SEQUELIZE_CONDITION_TYPES {
   noExtendRight = 'noExtendRight',
   between = 'between',
 }
+
+export enum SIGNUP_TYPE {
+  SIGN_UP = 'signUp',
+  LOG_IN = 'logIn'
+}
