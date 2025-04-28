@@ -1,4 +1,4 @@
-import { col, Op, Sequelize } from 'sequelize';
+import { col, Op, ProjectionAlias, Sequelize } from 'sequelize';
 import { CustomerOrdersDetailsModel, OrderCategoryModel, sequelize } from '../../../common/models/pg';
 import { customerOrdersJoinKey } from '../../../common/types/constants/RelationKeysConstants';
 import { getCustomLogger } from '../../../common/utils/Logger';
@@ -42,7 +42,7 @@ export const fetchCustomerOrders = async (props: any) => {
       include: [
         {
           model: OrderCategoryModel,
-          attributes: [], // Select specific fields from orders
+          attributes: [],
           required: true,
         },
       ],
@@ -62,15 +62,18 @@ export const fetchCustomerOrders = async (props: any) => {
 };
 
 export const getSalesOrderRevenue = async (props: any): Promise<SalesRevenueRecord[]> => {
-  const { searchObject, dateRangeObject } = props;
+  const { searchObject, dateRangeObject, groups = [] } = props;
   const searchArray = Object.keys(searchObject);
   const dateRangeTypeArray = Object.keys(dateRangeObject);
   try {
     CustomerOrdersDetailsModel.belongsTo(OrderCategoryModel, customerOrdersJoinKey);
     return (await CustomerOrdersDetailsModel.findAll({
       attributes: [
-        [col('OrderCategoryModel.order_category_type'), 'orderCategoryType'],
-        [col('OrderCategoryModel.sub_category_type'), 'subCategoryType'],
+        ...Object.entries(groups).map(([key, field]: [key: string, field: string]) => {
+          return [col(field),key] as ProjectionAlias;
+        }),
+        // [col('OrderCategoryModel.order_category_type'), 'orderCategoryType'],
+        // [col('OrderCategoryModel.sub_category_type'), 'subCategoryType'],
         [Sequelize.fn('COUNT', Sequelize.col('*')), 'salesOrder'],
         [Sequelize.fn('SUM', Sequelize.col('order_price')), 'productRevenue'],
       ],
@@ -85,8 +88,10 @@ export const getSalesOrderRevenue = async (props: any): Promise<SalesRevenueReco
                 Sequelize.fn('EXTRACT', Sequelize.literal(`${rangeType.toUpperCase()} FROM "order_date"`)),
                 dateRangeObject[rangeType],
               );
-            } else if (Object.values(DATE_CATEGORY_TYPE).slice(2).includes(rangeType)) {
+            } else if (rangeType === DATE_CATEGORY_TYPE.DATE) {
               return { order_date: dateRangeObject[rangeType] };
+            } else if (rangeType === DATE_CATEGORY_TYPE.RANGE) {
+              return { order_date: {[Op.between]: dateRangeObject[rangeType]}}
             }
           }),
         ],
@@ -94,11 +99,11 @@ export const getSalesOrderRevenue = async (props: any): Promise<SalesRevenueReco
       include: [
         {
           model: OrderCategoryModel,
-          attributes: [], // Select specific fields from orders
+          attributes: [],
           required: true,
         },
       ],
-      group: ['OrderCategoryModel.sub_category_type', 'OrderCategoryModel.order_category_type'],
+      group: Object.values(groups),
       order: [['productRevenue', SORT.DESC]],
       raw: true,
       logging: true,

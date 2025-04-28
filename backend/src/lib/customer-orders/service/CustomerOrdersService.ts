@@ -38,7 +38,13 @@ export const fetchSalesRevenue = async (req: Request, res: Response) => {
     const dateRangeObject = {
       [dateCategory.categoryType]: dateCategory.rangeValue,
     };
-    const revenueRecords = await getSalesOrderRevenue({ searchObject, dateRangeObject });
+
+    const groups = {
+      orderCategoryType: 'OrderCategoryModel.order_category_type',
+      ...(orderCategoryType && {subCategoryType: 'OrderCategoryModel.sub_category_type'}),
+      ...(subCategoryType && { productCategoryType: 'CustomerOrdersDetailsModel.order_name'})
+    };
+    const revenueRecords = await getSalesOrderRevenue({ searchObject, dateRangeObject, groups });
 
     const revenueObject = {};
 
