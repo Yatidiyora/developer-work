@@ -25,6 +25,7 @@ const getConfig = () => {
       process.env.TOKEN_MAX_AGE_VALUE_IN_HOURS || '10',
     TOKEN_EXPIRATION: process.env.JWT_TOKEN_EXPIRATION || '10h',
     AUTHENTICATION_KEY: process.env.AUTHENTICATION_KEY || 'W08Vzk7EjI5IBTmptljmx97qxXQgGgDu',
+    SIGN_UP_ROLE_ID: process.env.SIGN_UP_ROLE_ID,
   };
 };
 

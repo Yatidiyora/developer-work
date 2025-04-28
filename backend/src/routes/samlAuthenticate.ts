@@ -1,11 +1,7 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import passport from 'passport';
-import getConfig from '../common/config/config';
-import { LogoutTokenPayload, Profile, RequestWithUser } from '../common/types/interfaces/SamlAuth';
-import { samlCallback, samlStrategy } from '../samlStrategy';
-import { STATUS_CODE, STATUS_MESSAGE } from '../common/types/enums/CommonEnums';
-import { UserDetailsModel } from '../common/models/pg/UserDetailsModel';
 import { getCustomLogger } from '../common/utils/Logger';
+import { samlCallback } from '../samlStrategy';
 
 const logger = getCustomLogger('samlAuth::routes');
 

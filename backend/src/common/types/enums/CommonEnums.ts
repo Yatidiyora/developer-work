@@ -198,6 +198,11 @@ export enum SEQUELIZE_CONDITION_TYPES {
   between = 'between',
 }
 
+export enum SIGNUP_TYPE {
+  SIGN_UP = 'signUp',
+  LOG_IN = 'logIn'
+}
+
 export enum DATE_CATEGORY_TYPE {
   YEAR = 'year',
   MONTH = 'month',
